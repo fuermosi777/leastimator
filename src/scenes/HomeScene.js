@@ -7,13 +7,16 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import {SettingRoute} from '../routes';
+import {AddCarRoute} from '../routes';
 import {COLOR} from '../constants';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class HomeScene extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <LinearGradient 
+        colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+        style={styles.container}>
         <Image style={styles.outline} source={require('../images/outline.png')}/>
         <Text style={styles.text}>Add your first car</Text>
         <View style={styles.plusButton}>
@@ -24,17 +27,14 @@ export default class HomeScene extends Component {
             <Image source={require('../images/plus.png')} style={styles.plus}/>
           </TouchableHighlight>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   handlePlusPress = () => {
-    this.props.navigator.push(SettingRoute);
+    this.props.navigator.push(AddCarRoute);
   }
 
-  _navigate() {
-    this.props.navigator.push(SettingRoute);
-  }
 }
 
 const windowWidth = Dimensions.get('window').width;

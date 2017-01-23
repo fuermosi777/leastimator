@@ -3,7 +3,7 @@ import {
   View,
 } from 'react-native';
 
-export default class HomeScene extends Component {
+export default class SettingScene extends Component {
   render() {
     return (
       <View>
@@ -12,7 +12,7 @@ export default class HomeScene extends Component {
   }
 }
 
-HomeScene.propTypes = {
+SettingScene.propTypes = {
   cur: PropTypes.object.isRequired,
   navigator: PropTypes.object.isRequired,
 };

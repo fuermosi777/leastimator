@@ -4,8 +4,8 @@ import {
   StatusBar,
 } from 'react-native';
 import Nav from './components/Nav';
-import LinearGradient from 'react-native-linear-gradient';
 import {COLOR} from './constants';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class App extends Component {
   render() {

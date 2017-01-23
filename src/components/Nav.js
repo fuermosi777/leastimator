@@ -74,8 +74,11 @@ export default class Nav extends Component {
     return <route.component cur={this.props.cur} navigator={navigator} {...route.passProps} />;
   }
 
-  configureScene = () => {
-    return Navigator.SceneConfigs.FloatFromRight;
+  configureScene = (route) => {
+    if(route.type === 'Modal') {
+      return Navigator.SceneConfigs.FloatFromBottom;
+    }
+    return Navigator.SceneConfigs.PushFromRight;
   }
 }
 
