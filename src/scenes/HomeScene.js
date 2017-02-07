@@ -6,44 +6,78 @@ import {
   Image,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from 'react-native';
-import {AddCarRoute} from '../routes';
+import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
 import LinearGradient from 'react-native-linear-gradient';
+import CarListItem from '../components/CarListItem';
 
 export default class HomeScene extends Component {
   render() {
-    return (
-      <LinearGradient 
-        colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
-        style={styles.container}>
-        <Image style={styles.outline} source={require('../images/outline.png')}/>
-        <Text style={styles.text}>Add your first car</Text>
-        <View style={styles.plusButton}>
-          <TouchableHighlight
-            underlayColor="transparent"
-            onPress={this.handlePlusPress}
-          >
-            <Image source={require('../images/plus.png')} style={styles.plus}/>
-          </TouchableHighlight>
-        </View>
-      </LinearGradient>
-    );
+    let {cur} = this.props;
+    let showFirstScreen = this.props.cur.value().cars.length === 0;
+    if (showFirstScreen) {
+      return (
+        <LinearGradient 
+          colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+          style={styles.containerHello}>
+          <Image style={styles.outline} source={require('../images/outline.png')}/>
+          <Text style={styles.text}>Add your first car</Text>
+          <View style={styles.plusButton}>
+            <TouchableHighlight
+              underlayColor="transparent"
+              onPress={this.handlePlusPress}>
+              <Image source={require('../images/plus.png')} style={styles.plus}/>
+            </TouchableHighlight>
+          </View>
+        </LinearGradient>
+      );
+    } else {
+      return (
+        <LinearGradient 
+          colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+          style={styles.containerList}>
+          <ScrollView style={styles.scrollView}>
+          {cur.value().cars.map((car, key) => {
+            return (
+              <CarListItem 
+                car={car}
+                onPress={this.handlePressCarListItem.bind(this, car)}
+                key={key}
+              />
+            );
+          })}
+          </ScrollView>
+        </LinearGradient>
+      );
+    }
+  }
+
+  handlePressCarListItem(car) {
+    this.props.cur.refine('selectedCar').set(car);
+    this.props.navigator.push(CarRoute);
   }
 
   handlePlusPress = () => {
     this.props.navigator.push(AddCarRoute);
   }
-
 }
 
 const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  container: {
+  containerHello: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  containerList: {
+    paddingTop: 64,
+    flex: 1,
+  },
+  scrollView: {
+    paddingTop: 16,
   },
   outline: {
     marginBottom: 40,

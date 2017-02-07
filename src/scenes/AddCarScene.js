@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLOR, INPUT_GROUP_TYPE} from '../constants';
@@ -12,6 +13,8 @@ import SelectCarIcon from '../components/SelectCarIcon';
 import {SelectCarIconRoute} from '../routes';
 import InputGroup from '../components/InputGroup';
 import {todayDate} from '../tool';
+import Car from '../models/Car';
+import moment from 'moment';
 
 const DEFAULT_CAR_ICON_NAME = 'convertible';
 
@@ -101,12 +104,72 @@ export default class AddCarScene extends Component {
   handleInputTextChange = (key, text) => {
     let state = this.state;
     state.inputs[key].value = text;
+    this.setState(state);
+  }
+
+  getInputValue(inputName) {
+    let inputs = this.state.inputs;
+    return inputs.filter(input => input.name === inputName)[0].value;
+  }
+
+  validate(input) {
+    if (!input.value) {
+      throw new Error('Please fill all fields');
+    }
+    if (input.type === INPUT_GROUP_TYPE.TEXT) {
+      if (input.value.length > 20) {
+        throw new Error(`The ${input.label} is too long`);
+      }
+    }
+    if (input.type === INPUT_GROUP_TYPE.INTEGER) {
+      if (input.value.length > 5) {
+        throw new Error(`The number of ${input.label} is too large`);
+      }
+      if (!/^\d+$/.test(input.value)) {
+        throw new Error('Only integer is allowed');
+      }
+    }
+    if (input.type === INPUT_GROUP_TYPE.DATE) {
+      let formatOK = /^((0?[13578]|10|12)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[01]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1}))|(0?[2469]|11)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[0]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1})))$/.test(input.value);
+      if (!formatOK) {
+        throw new Error('The date format should be MM/DD/YYYY');
+      }
+      var date = moment(input.value, 'MM/DD/YYYY');
+      var today = moment();
+      if (today < date) {
+        throw new Error('Only past date is allowed');
+      }
+    }
   }
 
   handleSavePress = () => {
-    // TODO
-  }
+    let inputs = this.state.inputs;
 
+    try {
+      for (let input of inputs) {
+        this.validate(input);
+      }
+    } catch (err) {
+      Alert.alert('Error', err.message, [{text: 'OK'}]);
+      return;
+    }
+
+    var leaseStartDate = this.getInputValue('leaseStartDate');
+    leaseStartDate = moment(leaseStartDate, 'MM/DD/YYYY');
+    leaseStartDate = leaseStartDate.format('MM/DD/YYYY');
+
+    var car = Car.create({
+      carIconName: this.state.selectedCarIconName,
+      nickname: this.getInputValue('nickname'),
+      startingMiles: this.getInputValue('startingMiles'),
+      milesAllowed: this.getInputValue('milesAllowed'),
+      lengthOfLease: this.getInputValue('lengthOfLease'),
+      leaseStartDate: leaseStartDate,
+    });
+
+    this.props.cur.refine('cars').push([car]);
+    this.props.navigator.pop();    
+  }
 }
 
 const styles = StyleSheet.create({

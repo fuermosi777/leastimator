@@ -7,3 +7,7 @@ export function todayDate() {
   today = mm + '/' + dd + '/' + yyyy;
   return today;
 }
+
+export function uuid() {
+  return new Date().valueOf();
+}

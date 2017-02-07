@@ -2,6 +2,7 @@ import HomeScene from './scenes/HomeScene';
 import SettingScene from './scenes/SettingScene';
 import AddCarScene from './scenes/AddCarScene';
 import SelectCarIconScene from './scenes/SelectCarIconScene';
+import CarScene from './scenes/CarScene';
 
 const burgerImage = require('./images/burger.png');
 const leftArrowImage = require('./images/left_arrow.png');
@@ -10,6 +11,7 @@ const closeImage = require('./images/close.png');
 export const HomeRoute = {
   component: HomeScene,
   title: 'Leastimator',
+  secondTitle: 'Choose a Car',
   leftButton: {
     image: burgerImage,
     width: 26,
@@ -52,6 +54,19 @@ export const SelectCarIconRoute = {
   type: 'Modal',
   leftButton: {
     image: closeImage,
+    width: 20,
+    height: 20
+  },
+  onLeftButtonPress: (navigator) => {
+    navigator.pop();
+  },
+};
+
+export const CarRoute = {
+  component: CarScene,
+  title: '',
+  leftButton: {
+    image: leftArrowImage,
     width: 20,
     height: 20
   },

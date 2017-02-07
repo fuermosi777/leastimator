@@ -13,7 +13,7 @@ import {
 import {HomeRoute} from '../routes';
 import {COLOR} from '../constants';
 
-const routeMapper = {
+const routeMapper = props => ({
   LeftButton(route, navigator, index, navState) {
     if (route.leftButton) {
       return (
@@ -49,9 +49,15 @@ const routeMapper = {
     }
   },
   Title(route, navigator, index, navState) {
-    return <Text style={styles.title}>{route.title}</Text>;
+    return (
+      <Text style={styles.title}>
+        {(props.cur.value().cars.length !== 0 && route.secondTitle)
+          ? route.secondTitle
+          : route.title}
+      </Text>
+    );
   }
-};
+});
 
 export default class Nav extends Component {
   render() {
@@ -63,7 +69,7 @@ export default class Nav extends Component {
         navigationBar={
           <Navigator.NavigationBar
             style={styles.container}
-            routeMapper={routeMapper}
+            routeMapper={routeMapper(this.props)}
           />
         }
       />
