@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
-import LinearGradient from 'react-native-linear-gradient';
 import CarListItem from '../components/CarListItem';
+import LinearGradientBackground from '../components/LinearGradientBackground';
 
 export default class HomeScene extends Component {
   render() {
@@ -19,8 +19,7 @@ export default class HomeScene extends Component {
     let showFirstScreen = this.props.cur.value().cars.length === 0;
     if (showFirstScreen) {
       return (
-        <LinearGradient 
-          colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+        <LinearGradientBackground
           style={styles.containerHello}>
           <Image style={styles.outline} source={require('../images/outline.png')}/>
           <Text style={styles.text}>Add your first car</Text>
@@ -31,12 +30,11 @@ export default class HomeScene extends Component {
               <Image source={require('../images/plus.png')} style={styles.plus}/>
             </TouchableHighlight>
           </View>
-        </LinearGradient>
+        </LinearGradientBackground>
       );
     } else {
       return (
-        <LinearGradient 
-          colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+        <LinearGradientBackground
           style={styles.containerList}>
           <ScrollView style={styles.scrollView}>
           {cur.value().cars.map((car, key) => {
@@ -49,7 +47,7 @@ export default class HomeScene extends Component {
             );
           })}
           </ScrollView>
-        </LinearGradient>
+        </LinearGradientBackground>
       );
     }
   }

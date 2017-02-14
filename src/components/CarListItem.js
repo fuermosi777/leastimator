@@ -15,6 +15,7 @@ export default class CarListItem extends Component {
     return (
       <View style={styles.container}>
         <TouchableHighlight
+          underlayColor="transparent"
           onPress={this.props.onPress}
         >
           <View style={styles.item}>

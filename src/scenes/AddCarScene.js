@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientBackground from '../components/LinearGradientBackground';
 import {COLOR, INPUT_GROUP_TYPE} from '../constants';
 import SelectCarIcon from '../components/SelectCarIcon';
 import {SelectCarIconRoute} from '../routes';
@@ -60,8 +60,7 @@ export default class AddCarScene extends Component {
 
   render() {
     return (
-      <LinearGradient 
-        colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+      <LinearGradientBackground 
         style={styles.container}>
         <KeyboardAvoidingView behavior="position"
         >
@@ -93,7 +92,7 @@ export default class AddCarScene extends Component {
             <Text style={styles.text}>SAVE</Text>
           </TouchableHighlight>
         </View>
-      </LinearGradient>
+      </LinearGradientBackground>
     );
   }
 

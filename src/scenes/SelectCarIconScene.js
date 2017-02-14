@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   ListView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientBackground from '../components/LinearGradientBackground';
 import {COLOR} from '../constants';
 import carIcon from '../enums/carIcon';
 
@@ -24,8 +24,7 @@ export default class T extends Component {
 
   render() {
     return (     
-      <LinearGradient 
-        colors={[COLOR.LESSBLACK, COLOR.BLACK]} 
+      <LinearGradientBackground 
         style={styles.container}>
         <ListView 
           initialListSize={12}
@@ -33,7 +32,7 @@ export default class T extends Component {
           dataSource={this.state.dataSource}
           renderRow={this.renderRow}>
         </ListView>
-      </LinearGradient>
+      </LinearGradientBackground>
     );
   }
 

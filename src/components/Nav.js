@@ -90,8 +90,8 @@ export default class Nav extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
-    height: 56,
+    marginTop: 12,
+    height: 52,
   },
   title: {
     flex: 1,
