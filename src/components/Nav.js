@@ -17,15 +17,15 @@ const routeMapper = props => ({
   LeftButton(route, navigator, index, navState) {
     if (route.leftButton) {
       return (
-        <View style={styles.leftButton}>
-          <TouchableHighlight
-            underlayColor="transparent"
-            onPress={() => { route.onLeftButtonPress(navigator); }}>
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={() => { route.onLeftButtonPress(navigator); }}>
+          <View style={styles.leftButton}>
             <Image 
               source={route.leftButton.image} 
               style={{width: route.leftButton.width, height: route.leftButton.height}}/>
-          </TouchableHighlight>
-        </View>
+            </View>
+        </TouchableHighlight>
       );
     } else { 
       return null;
@@ -34,15 +34,15 @@ const routeMapper = props => ({
   RightButton(route, navigator, index, navState) {
     if (route.rightButton) {
       return (
-        <View style={styles.rightButton}>
-          <TouchableHighlight
-            underlayColor="transparent"
-            onPress={() => { route.onRightButtonPress(navigator); }}>
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={() => { route.onRightButtonPress(navigator); }}>
+          <View style={styles.rightButton}>
             <Image 
               source={route.rightButton.image} 
               style={{width: route.rightButton.width, height: route.rightButton.height}}/>
-          </TouchableHighlight>
-        </View>
+          </View>
+        </TouchableHighlight>
       );
     } else { 
       return null;
@@ -101,10 +101,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   leftButton: {
-    marginTop: 5,
     marginLeft: 10,
-    height: 56,
+    width: 40,
+    height: 30,
     alignItems: 'center',
+    justifyContent: 'center'
   },
   placeholder: {
     flex: 1,

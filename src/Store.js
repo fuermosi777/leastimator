@@ -28,7 +28,7 @@ export default class extends Component {
       selectedCar: null,
       cars: [],
     };
-    // this.state = TEST_STATE;
+    this.state = TEST_STATE;
   }
 
   render() {

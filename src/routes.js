@@ -67,7 +67,7 @@ export const CarRoute = {
   title: '',
   leftButton: {
     image: leftArrowImage,
-    width: 20,
+    width: 12,
     height: 20
   },
   onLeftButtonPress: (navigator) => {
