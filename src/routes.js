@@ -11,7 +11,6 @@ const closeImage = require('./images/close.png');
 export const HomeRoute = {
   component: HomeScene,
   title: 'Leastimator',
-  secondTitle: 'Choose a Car',
   leftButton: {
     image: burgerImage,
     width: 26,

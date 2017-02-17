@@ -12,11 +12,23 @@ import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
 import CarListItem from '../components/CarListItem';
 import LinearGradientBackground from '../components/LinearGradientBackground';
+import Realm from 'realm';
+import CarSchema from '../models/Car';
+import ReadingSchema from '../models/Reading';
 
 export default class HomeScene extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.db = new Realm({schema: [CarSchema, ReadingSchema]});
+  }
+
   render() {
-    let {cur} = this.props;
-    let showFirstScreen = this.props.cur.value().cars.length === 0;
+    let cars = this.db.objects('Car');
+    let showFirstScreen = cars.length === 0;
+
     if (showFirstScreen) {
       return (
         <LinearGradientBackground
@@ -37,7 +49,7 @@ export default class HomeScene extends Component {
         <LinearGradientBackground
           style={styles.containerList}>
           <ScrollView style={styles.scrollView}>
-          {cur.value().cars.map((car, key) => {
+          {cars.map((car, key) => {
             return (
               <CarListItem 
                 car={car}
@@ -53,8 +65,11 @@ export default class HomeScene extends Component {
   }
 
   handlePressCarListItem(car) {
-    this.props.cur.refine('selectedCar').set(car);
-    this.props.navigator.push(CarRoute);
+    this.props.navigator.push(Object.assign(CarRoute, {
+      passProps: {
+        carId: car.id
+      }
+    }));
   }
 
   handlePlusPress = () => {

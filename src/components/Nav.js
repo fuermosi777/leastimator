@@ -51,9 +51,7 @@ const routeMapper = props => ({
   Title(route, navigator, index, navState) {
     return (
       <Text style={styles.title}>
-        {(props.cur.value().cars.length !== 0 && route.secondTitle)
-          ? route.secondTitle
-          : route.title}
+        {route.title}
       </Text>
     );
   }
