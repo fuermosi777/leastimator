@@ -16,7 +16,7 @@ export default class App extends Component {
         <StatusBar
           barStyle="light-content"
         />
-        <Nav cur={this.props.cur}/>
+        <Nav/>
       </LinearGradient>
     );
   }
@@ -29,5 +29,5 @@ const styles = StyleSheet.create({
 });
 
 App.propTypes = {
-  cur: PropTypes.object.isRequired,
+  // cur: PropTypes.object.isRequired,
 };

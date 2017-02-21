@@ -69,6 +69,11 @@ export const CarRoute = {
     width: 12,
     height: 20
   },
+  rightButton: {
+    image: leftArrowImage,
+    width: 12,
+    height: 20
+  },
   onLeftButtonPress: (navigator) => {
     navigator.pop();
   },

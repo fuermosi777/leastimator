@@ -1,13 +1,17 @@
 import 'react-native';
 import React from 'react';
-import App from '../src/app.js';
+import HomeScene from '../../src/scenes/HomeScene.js';
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
 
+let navigator = {
+
+};
+
 it('renders correctly', () => {
   const tree = renderer.create(
-    <App/>
+    <HomeScene navigator={navigator}/>
   ).toJSON();
   expect(tree).toMatchSnapshot();
 });

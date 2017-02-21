@@ -6,8 +6,7 @@ import {
   Text,
   TouchableHighlight,
 } from 'react-native';
-import {COLOR} from '../constants';
-import carIcon from '../enums/carIcon';
+import {COLOR, CAR_ICON} from '../constants';
 
 export default class CarListItem extends Component {
   render() {
@@ -20,7 +19,7 @@ export default class CarListItem extends Component {
         >
           <View style={styles.item}>
             <View style={styles.circle}>
-              <Image style={styles.icon} source={carIcon[car.carIconName].icon}/>
+              <Image style={styles.icon} source={CAR_ICON[car.carIconName].icon}/>
             </View>
             <Text style={styles.text}>{car.nickname}</Text>
           </View>

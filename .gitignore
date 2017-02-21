@@ -53,3 +53,8 @@ fastlane/Preview.html
 fastlane/screenshots
 
 __snapshots__/
+
+# Realm ignore files
+*.realm
+*.lock
+*.mx

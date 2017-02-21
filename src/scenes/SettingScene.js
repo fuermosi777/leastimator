@@ -14,6 +14,5 @@ export default class SettingScene extends Component {
 }
 
 SettingScene.propTypes = {
-  cur: PropTypes.object.isRequired,
   navigator: PropTypes.object.isRequired,
 };

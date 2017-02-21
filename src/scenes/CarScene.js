@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  View,
   StyleSheet,
   ScrollView,
   Text,
@@ -22,7 +21,6 @@ export default class CarScene extends Component {
     };
     this.db = new Realm({schema: [CarSchema, ReadingSchema]});
     this.car = this.db.objects('Car').filtered(`id = ${props.carId}`).length;
-    console.log(this.car);
   }
 
   render() {

@@ -111,5 +111,4 @@ const styles = StyleSheet.create({
 });
 
 Nav.propTypes = {
-  cur: PropTypes.object.isRequired,
 };

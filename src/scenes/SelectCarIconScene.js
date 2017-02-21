@@ -8,8 +8,7 @@ import {
   ListView,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
-import {COLOR} from '../constants';
-import carIcon from '../enums/carIcon';
+import {COLOR, CAR_ICON} from '../constants';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -18,7 +17,7 @@ export default class T extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: ds.cloneWithRows(carIcon)
+      dataSource: ds.cloneWithRows(CAR_ICON)
     };
   }
 

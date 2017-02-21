@@ -6,8 +6,7 @@ import {
   Image,
   Text,
 } from 'react-native';
-import {COLOR} from '../constants';
-import carIcon from '../enums/carIcon';
+import {COLOR, CAR_ICON} from '../constants';
 
 export default class SelectCarIcon extends Component {
   constructor(props) {
@@ -21,7 +20,7 @@ export default class SelectCarIcon extends Component {
           <TouchableHighlight 
             onPress={this.handleIconPress}
             underlayColor="transparent">
-            <Image style={styles.icon} source={carIcon[this.props.carIconName].icon}/>
+            <Image style={styles.icon} source={CAR_ICON[this.props.carIconName].icon}/>
           </TouchableHighlight>
         </View>
         <Text style={styles.text}>Select car image</Text>
