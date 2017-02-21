@@ -23,6 +23,11 @@ export default class CarScene extends Component {
     this.car = this.db.objects('Car').filtered(`id = ${props.carId}`).length;
   }
 
+  componentWillMount() {
+    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
+    this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
+  }
+
   render() {
     return (     
       <LinearGradientBackground
@@ -40,6 +45,14 @@ export default class CarScene extends Component {
         </ScrollView>
       </LinearGradientBackground>
     );
+  }
+
+  handleLeftButtonPressed = () => {
+    this.props.navigator.pop();
+  }
+
+  handleRightButtonPressed = () => {
+    console.log('right button press');
   }
 }
 

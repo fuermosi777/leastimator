@@ -15,9 +15,6 @@ export const HomeRoute = {
     image: burgerImage,
     width: 26,
     height: 17
-  },
-  onLeftButtonPress: (navigator) => {
-    navigator.push(SettingRoute);
   }
 };
 
@@ -28,9 +25,6 @@ export const SettingRoute = {
     image: leftArrowImage,
     width: 12,
     height: 20
-  },
-  onLeftButtonPress: (navigator) => {
-    navigator.pop();
   }
 };
 
@@ -41,9 +35,6 @@ export const AddCarRoute = {
     image: leftArrowImage,
     width: 12,
     height: 20
-  },
-  onLeftButtonPress: (navigator) => {
-    navigator.pop();
   }
 };
 
@@ -55,10 +46,7 @@ export const SelectCarIconRoute = {
     image: closeImage,
     width: 20,
     height: 20
-  },
-  onLeftButtonPress: (navigator) => {
-    navigator.pop();
-  },
+  }
 };
 
 export const CarRoute = {
@@ -73,8 +61,5 @@ export const CarRoute = {
     image: leftArrowImage,
     width: 12,
     height: 20
-  },
-  onLeftButtonPress: (navigator) => {
-    navigator.pop();
-  },
+  }
 };

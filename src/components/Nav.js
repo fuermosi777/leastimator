@@ -19,7 +19,7 @@ const routeMapper = props => ({
       return (
         <TouchableHighlight
           underlayColor="transparent"
-          onPress={() => { route.onLeftButtonPress(navigator); }}>
+          onPress={route.onLeftButtonPressed}>
           <View style={styles.leftButton}>
             <Image 
               source={route.leftButton.image} 
@@ -36,7 +36,7 @@ const routeMapper = props => ({
       return (
         <TouchableHighlight
           underlayColor="transparent"
-          onPress={() => { route.onRightButtonPress(navigator); }}>
+          onPress={route.onRightButtonPressed}>
           <View style={styles.rightButton}>
             <Image 
               source={route.rightButton.image} 
@@ -75,7 +75,7 @@ export default class Nav extends Component {
   }
 
   renderScene = (route, navigator) => {
-    return <route.component cur={this.props.cur} navigator={navigator} {...route.passProps} />;
+    return <route.component cur={this.props.cur} navigator={navigator} route={route} {...route.passProps} />;
   }
 
   configureScene = (route) => {

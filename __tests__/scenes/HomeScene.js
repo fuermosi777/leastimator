@@ -6,7 +6,9 @@ import HomeScene from '../../src/scenes/HomeScene.js';
 import renderer from 'react-test-renderer';
 
 let navigator = {
-
+  push(route) {
+    
+  }
 };
 
 it('renders correctly', () => {

@@ -15,6 +15,7 @@ import LinearGradientBackground from '../components/LinearGradientBackground';
 import Realm from 'realm';
 import CarSchema from '../models/Car';
 import ReadingSchema from '../models/Reading';
+import {SettingRoute} from '../routes';
 
 export default class HomeScene extends Component {
 
@@ -23,6 +24,10 @@ export default class HomeScene extends Component {
     this.state = {
     };
     this.db = new Realm({schema: [CarSchema, ReadingSchema]});
+  }
+
+  componentWillMount() {
+    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
   render() {
@@ -62,6 +67,10 @@ export default class HomeScene extends Component {
         </LinearGradientBackground>
       );
     }
+  }
+
+  handleLeftButtonPressed = () => {
+    this.props.navigator.push(SettingRoute);
   }
 
   handlePressCarListItem(car) {
