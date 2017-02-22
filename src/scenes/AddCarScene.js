@@ -15,15 +15,15 @@ import InputGroup from '../components/InputGroup';
 import {todayDate} from '../tool';
 import Car from '../models/Car';
 import moment from 'moment';
+import BaseScene from './BaseScene';
 
 const DEFAULT_CAR_ICON_NAME = 'convertible';
 
-export default class AddCarScene extends Component {
+export default class AddCarScene extends BaseScene {
   constructor(props) {
     super(props);
     this.state = {
       selectedCarIconName: DEFAULT_CAR_ICON_NAME,
-      showDatePicker: false,
       inputs: [{
         name: 'nickname',
         value: '',
@@ -56,6 +56,12 @@ export default class AddCarScene extends Component {
         type: INPUT_GROUP_TYPE.DATE,
       }]
     };
+  }
+
+  componentWillMount() {
+    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
+
+    this.car = this.realm.objectForPrimaryKey('Car', this.props.carId);
   }
 
   render() {
@@ -94,6 +100,10 @@ export default class AddCarScene extends Component {
         </View>
       </LinearGradientBackground>
     );
+  }
+
+  handleLeftButtonPressed = () => {
+    this.props.navigator.pop();
   }
 
   handleCarIconNameSelected = (selectedCarIconName) => {
@@ -166,7 +176,6 @@ export default class AddCarScene extends Component {
       leaseStartDate: leaseStartDate,
     });
 
-    this.props.cur.refine('cars').push([car]);
     this.props.navigator.pop();    
   }
 }
@@ -190,5 +199,6 @@ const styles = StyleSheet.create({
 });
 
 AddCarScene.propTypes = {
+  route: PropTypes.object.isRequired,
   navigator: PropTypes.object.isRequired,
 };

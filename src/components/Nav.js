@@ -75,7 +75,7 @@ export default class Nav extends Component {
   }
 
   renderScene = (route, navigator) => {
-    return <route.component cur={this.props.cur} navigator={navigator} route={route} {...route.passProps} />;
+    return <route.component navigator={navigator} route={route} {...route.passProps} />;
   }
 
   configureScene = (route) => {

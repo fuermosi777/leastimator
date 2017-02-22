@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -7,20 +7,18 @@ import {
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {COLOR} from '../constants';
-import Realm from 'realm';
-import CarSchema from '../models/Car';
-import ReadingSchema from '../models/Reading';
+import {EditCarRoute} from '../routes';
+import BaseScene from './BaseScene';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
-export default class CarScene extends Component {
+export default class CarScene extends BaseScene {
   constructor(props) {
     super(props);
     this.state = {
       
     };
-    this.db = new Realm({schema: [CarSchema, ReadingSchema]});
-    this.car = this.db.objects('Car').filtered(`id = ${props.carId}`).length;
+    this.car = this.realm.objects('Car').filtered(`id = ${props.carId}`).length;
   }
 
   componentWillMount() {
@@ -52,7 +50,11 @@ export default class CarScene extends Component {
   }
 
   handleRightButtonPressed = () => {
-    console.log('right button press');
+    this.props.navigator.push(Object.assign(EditCarRoute, {
+      passProps: {
+        carId: this.props.carId
+      }
+    }));
   }
 }
 
@@ -70,3 +72,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+
+CarScene.propTypes = {
+  route: PropTypes.object.isRequired,
+  navigator: PropTypes.object.isRequired,
+  carId: PropTypes.number.isRequired
+};

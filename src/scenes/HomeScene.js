@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
   View,
   Text,
@@ -12,18 +12,15 @@ import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
 import CarListItem from '../components/CarListItem';
 import LinearGradientBackground from '../components/LinearGradientBackground';
-import Realm from 'realm';
-import CarSchema from '../models/Car';
-import ReadingSchema from '../models/Reading';
 import {SettingRoute} from '../routes';
+import BaseScene from './BaseScene';
 
-export default class HomeScene extends Component {
+export default class HomeScene extends BaseScene {
 
   constructor(props) {
     super(props);
     this.state = {
     };
-    this.db = new Realm({schema: [CarSchema, ReadingSchema]});
   }
 
   componentWillMount() {
@@ -31,7 +28,7 @@ export default class HomeScene extends Component {
   }
 
   render() {
-    let cars = this.db.objects('Car');
+    let cars = this.realm.objects('Car');
     let showFirstScreen = cars.length === 0;
 
     if (showFirstScreen) {

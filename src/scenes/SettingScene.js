@@ -5,6 +5,10 @@ import {
 import LinearGradientBackground from '../components/LinearGradientBackground';
 
 export default class SettingScene extends Component {
+  constructor(props) {
+    super(props);
+  }
+  
   componentWillMount() {
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
