@@ -105,6 +105,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  rightButton: {
+    marginRight: 10,
+    width: 40,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   placeholder: {
     flex: 1,
   }

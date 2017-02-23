@@ -8,6 +8,7 @@ import EditCarScene from './scenes/EditCarScene';
 const burgerImage = require('./images/burger.png');
 const leftArrowImage = require('./images/left_arrow.png');
 const closeImage = require('./images/close.png');
+const cogImage = require('./images/cog.png');
 
 export const HomeRoute = {
   component: HomeScene,
@@ -59,8 +60,8 @@ export const CarRoute = {
     height: 20
   },
   rightButton: {
-    image: leftArrowImage,
-    width: 12,
+    image: cogImage,
+    width: 20,
     height: 20
   }
 };

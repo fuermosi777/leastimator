@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import {
   View
 } from 'react-native';
-import LinearGradientBackground from '../components/LinearGradientBackground';
 import AddCarScene from './AddCarScene';
 
 export default class EditCarScene extends AddCarScene {
@@ -12,6 +11,8 @@ export default class EditCarScene extends AddCarScene {
 
     this.car = this.realm.objectForPrimaryKey('Car', props.carId);  
     props.route.title = `Edit ${this.car.nickname}`;
+    
+    this.isEditing = true;
   }
 
 }

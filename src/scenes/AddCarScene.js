@@ -16,6 +16,8 @@ import {todayDate} from '../tool';
 import Car from '../models/Car';
 import moment from 'moment';
 import BaseScene from './BaseScene';
+import BlockButton from '../components/BlockButton';
+import Gap from '../components/Gap';
 
 const DEFAULT_CAR_ICON_NAME = 'convertible';
 
@@ -56,12 +58,11 @@ export default class AddCarScene extends BaseScene {
         type: INPUT_GROUP_TYPE.DATE,
       }]
     };
+    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
   componentWillMount() {
-    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
-
-    this.car = this.realm.objectForPrimaryKey('Car', this.props.carId);
+    
   }
 
   render() {
@@ -91,13 +92,21 @@ export default class AddCarScene extends BaseScene {
             );
           })}
         </KeyboardAvoidingView>
-        <View style={styles.save}>
-          <TouchableHighlight
-            onPress={this.handleSavePress}
-          >
-            <Text style={styles.text}>SAVE</Text>
-          </TouchableHighlight>
-        </View>
+        <Gap height={40}/>
+        <BlockButton
+          onPress={this.handleSavePress}
+          title='SAVE'
+          color={COLOR.WHITE}
+          backgroundColor='transparent'
+        />
+        {this.isEditing ? 
+        <BlockButton
+          onPress={this.handleDeletePress}
+          title='DELETE'
+          color={COLOR.WHITE}
+          backgroundColor='transparent'
+        />
+        : null}
       </LinearGradientBackground>
     );
   }
@@ -177,6 +186,10 @@ export default class AddCarScene extends BaseScene {
     });
 
     this.props.navigator.pop();    
+  }
+
+  handleDeletePress = () => {
+    // TODO
   }
 }
 
