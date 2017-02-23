@@ -61,10 +61,6 @@ export default class AddCarScene extends BaseScene {
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
-  componentWillMount() {
-    
-  }
-
   render() {
     return (
       <LinearGradientBackground 
