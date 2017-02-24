@@ -1,27 +1,28 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
+  View,
   StyleSheet,
   ScrollView,
   Text,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
+import AddOdometerReadingButton from '../components/AddOdometerReadingButton';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {COLOR} from '../constants';
-import {EditCarRoute} from '../routes';
+import {EditCarRoute, AddOdometerReadingRoute} from '../routes';
 import BaseScene from './BaseScene';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
 export default class CarScene extends BaseScene {
+
   constructor(props) {
     super(props);
     this.state = {
       
     };
-    this.car = this.realm.objects('Car').filtered(`id = ${props.carId}`).length;
-  }
-
-  componentWillMount() {
+    this.car = this.realm.objectForPrimaryKey('Car', props.carId);
+    this.props.route.title = this.car.nickname;
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
     this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
   }
@@ -30,16 +31,25 @@ export default class CarScene extends BaseScene {
     return (     
       <LinearGradientBackground
         style={styles.container}>
-        <ScrollView>
-          <Text style={styles.title}></Text>
+        <ScrollView
+        >
           <AnimatedCircularProgress
-            size={140}
+            size={160}
             width={6}
             fill={75}
             tintColor={COLOR.PRIMARY_BLUE}
             backgroundColor={COLOR.SECONDARY}
             linecap={CIRCULAR_PROGRESS_LINECAP}
-            rotation={0} />
+            rotation={0}>
+            {fill => (
+              <View>
+                <Text>Predicted</Text>
+              </View>
+            )}
+          </AnimatedCircularProgress>
+          <AddOdometerReadingButton
+            onPress={this.handleAddOdometerReadingButtonPress}
+          />
         </ScrollView>
       </LinearGradientBackground>
     );
@@ -56,20 +66,21 @@ export default class CarScene extends BaseScene {
       }
     }));
   }
+
+  handleAddOdometerReadingButtonPress = () => {
+    this.props.navigator.push(Object.assign(AddOdometerReadingRoute, {
+      passProps: {
+        carId: this.props.carId
+      }
+    }));
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 64,
+    paddingTop: 64 + 20,
     alignItems: 'center',
     flex: 1
-  },
-  title: {
-    color: COLOR.PRIMARY,
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: '300',
-    marginBottom: 20,
   }
 });
 

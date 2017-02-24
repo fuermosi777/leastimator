@@ -1,16 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import {
   View,
+  TouchableHighlight,
   StyleSheet,
   Image,
-  Text,
-  TouchableHighlight,
 } from 'react-native';
-import {COLOR, CAR_ICON} from '../constants';
+import {COLOR} from '../constants';
 
-export default class CarListItem extends Component {
+export default class AddCarListItem extends Component {
   render() {
-    let {car} = this.props;
     return (
       <View style={styles.container}>
         <TouchableHighlight
@@ -19,12 +17,11 @@ export default class CarListItem extends Component {
         >
           <View style={styles.item}>
             <View style={styles.circle}>
-              <Image style={styles.icon} source={CAR_ICON[car.carIconName].icon}/>
+              <Image style={styles.icon} source={require('../images/add.png')}/>
             </View>
-            <Text style={styles.text}>{car.nickname}</Text>
           </View>
         </TouchableHighlight>
-      </View>
+      </View>  
     );
   }
 }
@@ -32,8 +29,6 @@ export default class CarListItem extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 105,
-    borderBottomWidth: 1,
-    borderBottomColor: COLOR.DIVIDER,
     justifyContent: 'center',
   },
   item: {
@@ -52,17 +47,11 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   icon: {
-    width: 60,
+    width: 20,
     resizeMode: 'contain',
-  },
-  text: {
-    color: COLOR.WHITE,
-    fontSize: 20,
-    fontWeight: '300',
   }
 });
 
-CarListItem.propTypes = {
-  car: PropTypes.object.isRequired,
+AddCarListItem.propTypes = {
   onPress: PropTypes.func.isRequired,
 };

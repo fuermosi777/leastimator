@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import CarSchema from '../models/Car';
 import ReadingSchema from '../models/Reading';
 import Realm from 'realm';

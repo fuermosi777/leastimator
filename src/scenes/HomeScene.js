@@ -11,6 +11,7 @@ import {
 import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
 import CarListItem from '../components/CarListItem';
+import AddCarListItem from '../components/AddCarListItem';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import {SettingRoute} from '../routes';
 import BaseScene from './BaseScene';
@@ -60,6 +61,7 @@ export default class HomeScene extends BaseScene {
               />
             );
           })}
+          <AddCarListItem onPress={this.handlePlusPress}/>
           </ScrollView>
         </LinearGradientBackground>
       );

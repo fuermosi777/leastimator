@@ -1,10 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   KeyboardAvoidingView,
-  Text,
-  View,
-  TouchableHighlight,
   Alert,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
@@ -12,60 +9,48 @@ import {COLOR, INPUT_GROUP_TYPE} from '../constants';
 import SelectCarIcon from '../components/SelectCarIcon';
 import {SelectCarIconRoute} from '../routes';
 import InputGroup from '../components/InputGroup';
-import {todayDate} from '../tool';
-import Car from '../models/Car';
+import {todayDateText} from '../tool';
 import moment from 'moment';
 import BaseScene from './BaseScene';
 import BlockButton from '../components/BlockButton';
 import Gap from '../components/Gap';
+import {uuid} from '../tool';
 
 const DEFAULT_CAR_ICON_NAME = 'convertible';
 
 export default class AddCarScene extends BaseScene {
+
+  isEditing = false;
+
   constructor(props) {
     super(props);
-    this.state = {
-      selectedCarIconName: DEFAULT_CAR_ICON_NAME,
-      inputs: [{
-        name: 'nickname',
-        value: '',
-        label: 'Nickname',
-        placeholder: 'My car',
-        type: INPUT_GROUP_TYPE.TEXT,
-      }, {
-        name: 'startingMiles',
-        value: '',
-        label: 'Starting Miles',
-        placeholder: '20',
-        type: INPUT_GROUP_TYPE.INTEGER,
-      }, {
-        name: 'milesAllowed',
-        value: '',
-        label: 'Miles Allowed',
-        placeholder: '30000',
-        type: INPUT_GROUP_TYPE.INTEGER,
-      }, {
-        name: 'lengthOfLease',
-        value: '',
-        label: 'Length of Lease',
-        placeholder: '36',
-        type: INPUT_GROUP_TYPE.INTEGER,
-      }, {
-        name: 'leaseStartDate',
-        value: '',
-        label: 'Lease Start Date',
-        placeholder: todayDate(),
-        type: INPUT_GROUP_TYPE.DATE,
-      }]
-    };
+    this.state = {};
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
+  }
+
+  componentWillMount() {
+    let leaseStartDate = '';
+    if (this.isEditing) {
+      leaseStartDate = moment(this.car.leaseStartDate);
+      leaseStartDate = leaseStartDate.format('MM/DD/YYYY');
+    }
+    
+    this.setState({
+      selectedCarIconName: this.isEditing ? this.car.carIconName : DEFAULT_CAR_ICON_NAME,
+      nickname: this.isEditing ? this.car.nickname : '',
+      startingMiles: this.isEditing ? String(this.car.startingMiles) : '',
+      milesAllowed: this.isEditing ? String(this.car.milesAllowed) : '',
+      lengthOfLease: this.isEditing ? String(this.car.lengthOfLease) : '',
+      leaseStartDate: this.isEditing ? leaseStartDate : '',
+    });
   }
 
   render() {
     return (
       <LinearGradientBackground 
         style={styles.container}>
-        <KeyboardAvoidingView behavior="position"
+        <KeyboardAvoidingView 
+          behavior='position'
         >
           <SelectCarIcon
             carIconName={this.state.selectedCarIconName}
@@ -75,32 +60,55 @@ export default class AddCarScene extends BaseScene {
               }
             }));}}
           />
-          {this.state.inputs.map((item, key) => {
-            return (
-              <InputGroup 
-                key={key}
-                value={item.value} 
-                label={item.label}
-                placeholder={item.placeholder} 
-                type={item.type}
-                onChangeText={this.handleInputTextChange.bind(this, key)}
-              />
-            );
-          })}
+          <InputGroup 
+            value={this.state.nickname} 
+            label='Nickname'
+            placeholder='My car'
+            type={INPUT_GROUP_TYPE.TEXT}
+            onChangeText={this.handleInputTextChange.bind(this, 'nickname')}
+          />
+          <InputGroup 
+            value={this.state.startingMiles} 
+            label='Starting Miles'
+            placeholder='20'
+            type={INPUT_GROUP_TYPE.INTEGER}
+            onChangeText={this.handleInputTextChange.bind(this, 'startingMiles')}
+          />
+          <InputGroup 
+            value={this.state.milesAllowed} 
+            label='Miles Allowed'
+            placeholder='30000'
+            type={INPUT_GROUP_TYPE.INTEGER}
+            onChangeText={this.handleInputTextChange.bind(this, 'milesAllowed')}
+          />
+          <InputGroup 
+            value={this.state.lengthOfLease} 
+            label='Length of Lease'
+            placeholder='36'
+            type={INPUT_GROUP_TYPE.INTEGER}
+            onChangeText={this.handleInputTextChange.bind(this, 'lengthOfLease')}
+          />
+          <InputGroup 
+            value={this.state.leaseStartDate} 
+            label='Lease Start Date'
+            placeholder={todayDateText()}
+            type={INPUT_GROUP_TYPE.DATE}
+            onChangeText={this.handleInputTextChange.bind(this, 'leaseStartDate')}
+          />
         </KeyboardAvoidingView>
         <Gap height={40}/>
         <BlockButton
           onPress={this.handleSavePress}
           title='SAVE'
           color={COLOR.WHITE}
-          backgroundColor='transparent'
+          backgroundColor={COLOR.TRANSPARENT}
         />
         {this.isEditing ? 
         <BlockButton
           onPress={this.handleDeletePress}
           title='DELETE'
           color={COLOR.WHITE}
-          backgroundColor='transparent'
+          backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
       </LinearGradientBackground>
@@ -116,17 +124,12 @@ export default class AddCarScene extends BaseScene {
   }
 
   handleInputTextChange = (key, text) => {
-    let state = this.state;
-    state.inputs[key].value = text;
-    this.setState(state);
-  }
-
-  getInputValue(inputName) {
-    let inputs = this.state.inputs;
-    return inputs.filter(input => input.name === inputName)[0].value;
+    this.setState({[key]: text});
   }
 
   validate(input) {
+
+    // TODO
     if (!input.value) {
       throw new Error('Please fill all fields');
     }
@@ -168,24 +171,54 @@ export default class AddCarScene extends BaseScene {
       return;
     }
 
-    var leaseStartDate = this.getInputValue('leaseStartDate');
-    leaseStartDate = moment(leaseStartDate, 'MM/DD/YYYY');
-    leaseStartDate = leaseStartDate.format('MM/DD/YYYY');
+    var leaseStartDate = this.state.leaseStartDate;
+    leaseStartDate = moment(leaseStartDate, 'MM/DD/YYYY').toDate();
 
-    var car = Car.create({
-      carIconName: this.state.selectedCarIconName,
-      nickname: this.getInputValue('nickname'),
-      startingMiles: this.getInputValue('startingMiles'),
-      milesAllowed: this.getInputValue('milesAllowed'),
-      lengthOfLease: this.getInputValue('lengthOfLease'),
+    let car = {
+      carIconName: String(this.state.selectedCarIconName),
+      nickname: String(this.state.nickname),
+      startingMiles: Number(this.state.startingMiles),
+      milesAllowed: Number(this.state.milesAllowed),
+      lengthOfLease: Number(this.state.lengthOfLease),
       leaseStartDate: leaseStartDate,
-    });
+    };
+
+    if (this.isEditing) {
+      this.realm.write(() => {
+        Object.keys(car).forEach(key => {
+          this.car[key] = car[key];
+        });      
+      });
+    } else {
+      this.realm.write(() => {
+        this.realm.create('Car', Object.assign(car, {
+          id: Number(uuid())
+        }));
+      });
+    }
 
     this.props.navigator.pop();    
   }
 
   handleDeletePress = () => {
-    // TODO
+    if (this.isEditing) {
+      Alert.alert(
+        'Delete',
+        `Do you want to delete ${this.car.nickname}?`, [{
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel'
+        }, {
+          text: 'Yes',
+          onPress: () => {
+            this.realm.write(() => {
+              this.realm.delete(this.car);
+            });
+            this.props.navigator.popToTop();
+          }
+        }]
+      );
+    }
   }
 }
 
@@ -202,7 +235,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: COLOR.WHITE,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '300',
   }
 });

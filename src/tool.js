@@ -1,4 +1,4 @@
-export function todayDate() {
+export function todayDateText() {
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth() + 1;

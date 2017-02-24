@@ -5,7 +5,8 @@ export const COLOR = {
   PRIMARY: '#FFFFFF',
   SECONDARY: '#67686F',
   DIVIDER: '#373541',
-  PRIMARY_BLUE: '#7BCDFB'
+  PRIMARY_BLUE: '#7BCDFB',
+  TRANSPARENT: 'transparent',
 };
 
 export const INPUT_GROUP_TYPE = {

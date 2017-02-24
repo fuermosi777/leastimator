@@ -10,6 +10,7 @@
     "moment": "^2.17.1",
     "react": "15.4.2",
     "react-native": "0.40.0",
+    "react-native-animated-modal": "^1.0.2",
     "react-native-circular-progress": "0.0.8",
     "react-native-linear-gradient": "^2.0.0",
     "realm": "^1.0.2"
