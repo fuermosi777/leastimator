@@ -79,7 +79,6 @@ export default class CarScene extends BaseScene {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 64 + 20,
-    alignItems: 'center',
     flex: 1
   }
 });
