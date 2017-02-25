@@ -1,3 +1,12 @@
+export const DEFAULT = {
+  CAR_ICON_NAME: 'convertible',
+  LENGTH_OF_LEASE: 36,
+};
+
+export const MAX = {
+  LENGTH_OF_LEASE: 48
+}
+
 export const COLOR = {
   BLACK: '#000000',
   LESSBLACK: '#3D3A48',

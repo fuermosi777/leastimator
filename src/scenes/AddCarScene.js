@@ -5,18 +5,17 @@ import {
   Alert,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
-import {COLOR, INPUT_GROUP_TYPE} from '../constants';
+import {COLOR, INPUT_GROUP_TYPE, DEFAULT, MAX} from '../constants';
 import SelectCarIcon from '../components/SelectCarIcon';
 import {SelectCarIconRoute} from '../routes';
 import InputGroup from '../components/InputGroup';
-import {todayDateText} from '../tool';
+import DatePicker from '../components/DatePicker';
 import moment from 'moment';
 import BaseScene from './BaseScene';
 import BlockButton from '../components/BlockButton';
 import Gap from '../components/Gap';
 import {uuid} from '../tool';
-
-const DEFAULT_CAR_ICON_NAME = 'convertible';
+import validator, {isNotEmpty, isInteger, isString, isDate, isLengthLessOrEqualThan, isLessOrEqualThan, isPastDate} from '../utils/validator';
 
 export default class AddCarScene extends BaseScene {
 
@@ -24,28 +23,22 @@ export default class AddCarScene extends BaseScene {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showDatePicker: false,
+      selectedCarIconName: DEFAULT.CAR_ICON_NAME,
+      nickname: '',
+      startingMiles: null,
+      milesAllowed: null,
+      lengthOfLease: null,
+      leaseStartDate: new Date(),
+    };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
-  componentWillMount() {
-    let leaseStartDate = '';
-    if (this.isEditing) {
-      leaseStartDate = moment(this.car.leaseStartDate);
-      leaseStartDate = leaseStartDate.format('MM/DD/YYYY');
-    }
-    
-    this.setState({
-      selectedCarIconName: this.isEditing ? this.car.carIconName : DEFAULT_CAR_ICON_NAME,
-      nickname: this.isEditing ? this.car.nickname : '',
-      startingMiles: this.isEditing ? String(this.car.startingMiles) : '',
-      milesAllowed: this.isEditing ? String(this.car.milesAllowed) : '',
-      lengthOfLease: this.isEditing ? String(this.car.lengthOfLease) : '',
-      leaseStartDate: this.isEditing ? leaseStartDate : '',
-    });
-  }
-
   render() {
+    let maximumDate = new Date();
+    let minimumDate = moment(this.state.leaseStartDate).subtract(this.state.lengthOfLease || MAX.LENGTH_OF_LEASE, 'M').toDate();
+
     return (
       <LinearGradientBackground 
         style={styles.container}>
@@ -89,11 +82,10 @@ export default class AddCarScene extends BaseScene {
             onChangeText={this.handleInputTextChange.bind(this, 'lengthOfLease')}
           />
           <InputGroup 
-            value={this.state.leaseStartDate} 
+            value={moment(this.state.leaseStartDate).format('MM/DD/YYYY')}
             label='Lease Start Date'
-            placeholder={todayDateText()}
             type={INPUT_GROUP_TYPE.DATE}
-            onChangeText={this.handleInputTextChange.bind(this, 'leaseStartDate')}
+            onPress={this.handleDatePressed}
           />
         </KeyboardAvoidingView>
         <Gap height={40}/>
@@ -111,8 +103,31 @@ export default class AddCarScene extends BaseScene {
           backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
+        <DatePicker
+          isVisible={this.state.showDatePicker}
+          onConfirm={this.handleDatePickerConfirm}
+          onCancel={this.handleDatePickerCancel}
+          maximumDate={maximumDate}
+          minimumDate={minimumDate}
+          title='Pick a lease start date'/>
       </LinearGradientBackground>
     );
+  }
+
+  handleDatePickerConfirm = (date) => {
+    this.setState({leaseStartDate: date, showDatePicker: false});
+  }
+
+  handleDatePickerCancel = () => {
+    this.setState({showDatePicker: false});
+  }
+
+  handleDatePickerChange = (date) => {
+    this.setState({leaseStartDate: date});
+  }
+
+  handleDatePressed = () => {
+    this.setState({showDatePicker: true});
   }
 
   handleLeftButtonPressed = () => {
@@ -127,45 +142,13 @@ export default class AddCarScene extends BaseScene {
     this.setState({[key]: text});
   }
 
-  validate(input) {
-
-    // TODO
-    if (!input.value) {
-      throw new Error('Please fill all fields');
-    }
-    if (input.type === INPUT_GROUP_TYPE.TEXT) {
-      if (input.value.length > 20) {
-        throw new Error(`The ${input.label} is too long`);
-      }
-    }
-    if (input.type === INPUT_GROUP_TYPE.INTEGER) {
-      if (input.value.length > 5) {
-        throw new Error(`The number of ${input.label} is too large`);
-      }
-      if (!/^\d+$/.test(input.value)) {
-        throw new Error('Only integer is allowed');
-      }
-    }
-    if (input.type === INPUT_GROUP_TYPE.DATE) {
-      let formatOK = /^((0?[13578]|10|12)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[01]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1}))|(0?[2469]|11)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[0]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1})))$/.test(input.value);
-      if (!formatOK) {
-        throw new Error('The date format should be MM/DD/YYYY');
-      }
-      var date = moment(input.value, 'MM/DD/YYYY');
-      var today = moment();
-      if (today < date) {
-        throw new Error('Only past date is allowed');
-      }
-    }
-  }
-
   handleSavePress = () => {
-    let inputs = this.state.inputs;
-
     try {
-      for (let input of inputs) {
-        this.validate(input);
-      }
+      validator.validate(this.state.nickname, 'Nickname', isNotEmpty, isString, isLengthLessOrEqualThan(20));
+      validator.validate(this.state.startingMiles, 'Starting miles', isNotEmpty, isInteger, isLessOrEqualThan(100000)); // TODO
+      validator.validate(this.state.milesAllowed, 'Miles allowed', isNotEmpty, isInteger, isLessOrEqualThan(100000)); // TODO
+      validator.validate(this.state.lengthOfLease, 'Length of lease', isNotEmpty, isInteger, isLessOrEqualThan(MAX.LENGTH_OF_LEASE));
+      validator.validate(this.state.leaseStartDate, 'Lease start date', isNotEmpty, isDate, isPastDate);
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
       return;

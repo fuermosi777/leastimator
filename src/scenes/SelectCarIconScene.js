@@ -1,24 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Image,
   TouchableHighlight,
   ListView,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
+import BaseScene from './BaseScene';
 import {COLOR, CAR_ICON} from '../constants';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-export default class T extends Component {
+export default class SelectCarIconScene extends BaseScene {
 
   constructor(props) {
     super(props);
     this.state = {
       dataSource: ds.cloneWithRows(CAR_ICON)
     };
+
+    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
   render() {
@@ -50,6 +52,10 @@ export default class T extends Component {
 
   handleCarIconPress = (rowID) => {
     this.props.onCarIconPress(rowID);
+    this.props.navigator.pop();
+  }
+
+  handleLeftButtonPressed = () => {
     this.props.navigator.pop();
   }
 }

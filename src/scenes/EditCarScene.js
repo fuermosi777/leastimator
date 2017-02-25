@@ -13,6 +13,14 @@ export default class EditCarScene extends AddCarScene {
     props.route.title = `Edit ${this.car.nickname}`;
     
     this.isEditing = true;
+    this.state = Object.assign(this.state, {
+      selectedCarIconName: this.car.carIconName,
+      nickname: this.car.nickname,
+      startingMiles: this.car.startingMiles,
+      milesAllowed: this.car.milesAllowed,
+      lengthOfLease: this.car.lengthOfLease,
+      leaseStartDate: this.car.leaseStartDate,
+    });
   }
 
 }

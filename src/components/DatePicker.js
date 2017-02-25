@@ -7,47 +7,36 @@ import {
   StyleSheet,
 } from 'react-native';
 import AnimatedModal from 'react-native-animated-modal';
+import {COLOR} from '../constants';
 
 export default class DatePicker extends Component {
   static propTypes = {
-    cancelTextIOS: PropTypes.string,
-    confirmTextIOS: PropTypes.string,
-    customCancelButtonIOS: PropTypes.node,
-    customConfirmButtonIOS: PropTypes.node,
-    customTitleContainerIOS: PropTypes.node,
-    datePickerContainerStyleIOS: View.propTypes.style,
-    date: PropTypes.instanceOf(Date),
+    date: PropTypes.instanceOf(Date).isRequired,
     mode: PropTypes.oneOf(['date', 'time', 'datetime']),
     onConfirm: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    title: PropTypes.string,
+    title: PropTypes.string.isRequired,
     isVisible: PropTypes.bool,
+    maximumDate: PropTypes.instanceOf(Date),
+    minimumDate: PropTypes.instanceOf(Date),
   };
 
   static defaultProps = {
-    cancelTextIOS: 'Cancel',
-    confirmTextIOS: 'Confirm',
     date: new Date(),
     mode: 'date',
-    title: 'Pick a date',
     isVisible: false,
   };
 
-  state = {
-    date: this.props.date,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.date !== nextProps.date) {
-      this.setState({
-        date: nextProps.date,
-      });
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: new Date(),
+    };
   }
 
-  _handleConfirm = () => this.props.onConfirm(this.state.date);
-
-  _handleDateChange = date => this.setState({ date });
+  handleDateChange = (date) => {
+    this.setState({date: date});
+  }
 
   render() {
     const {
@@ -55,13 +44,6 @@ export default class DatePicker extends Component {
       isVisible,
       mode,
       title,
-      confirmTextIOS,
-      cancelTextIOS,
-      customCancelButtonIOS,
-      customConfirmButtonIOS,
-      customTitleContainerIOS,
-      datePickerContainerStyleIOS,
-      ...otherProps
     } = this.props;
 
     const titleContainer = (
@@ -71,44 +53,45 @@ export default class DatePicker extends Component {
     );
     const confirmButton = (
       <View style={styles.confirmButton}>
-        <Text style={styles.confirmText}>{confirmTextIOS}</Text>
+        <Text style={styles.confirmText}>Confirm</Text>
       </View>
     );
     const cancelButton = (
       <View style={styles.cancelButton}>
-        <Text style={styles.cancelText}>{cancelTextIOS}</Text>
+        <Text style={styles.cancelText}>Cancel</Text>
       </View>
     );
     return (
       <AnimatedModal isVisible={isVisible} style={styles.contentContainer}>
-        <View style={[styles.datepickerContainer, datePickerContainerStyleIOS]}>
-          {customTitleContainerIOS || titleContainer}
+        <View style={styles.datepickerContainer}>
+          {titleContainer}
           <DatePickerIOS
             date={this.state.date}
             mode={mode}
-            onDateChange={this._handleDateChange}
-            {...otherProps}
+            maximumDate={this.props.maximumDate}
+            minimumDate={this.props.minimumDate}
+            onDateChange={this.handleDateChange}
           />
-          <TouchableOpacity onPress={this._handleConfirm}>
-            {customConfirmButtonIOS || confirmButton}
+          <TouchableOpacity onPress={() => this.props.onConfirm(this.state.date)}>
+            {confirmButton}
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          {customCancelButtonIOS || cancelButton}
+          {cancelButton}
         </TouchableOpacity>
       </AnimatedModal>
     );
   }
 }
 
-const BORDER_RADIUS = 14;
-const BACKGROUND_COLOR = 'white';
+const BORDER_RADIUS = 10;
+const BACKGROUND_COLOR = COLOR.WHITE;
 const BORDER_COLOR = '#d5d5d5';
 const TITLE_FONT_SIZE = 18;
-const TITLE_COLOR = 'black';
+const TITLE_COLOR = COLOR.BLACK;
 const BUTTON_FONT_WEIGHT = 'normal';
-const BUTTON_FONT_COLOR = '#007ff9';
-const BUTTON_FONT_SIZE = 24;
+const BUTTON_FONT_COLOR = COLOR.PRIMARY_BLUE;
+const BUTTON_FONT_SIZE = 22;
 
 const styles = StyleSheet.create({
   contentContainer: {
@@ -152,7 +135,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: BUTTON_FONT_COLOR,
     fontSize: BUTTON_FONT_SIZE,
-    fontWeight: '500',
     backgroundColor: 'transparent',
   },
 });

@@ -12,8 +12,8 @@ export default class InputGroup extends Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+    placeholder: PropTypes.string,
     type: PropTypes.oneOf([INPUT_GROUP_TYPE.DATE, INPUT_GROUP_TYPE.INTEGER, INPUT_GROUP_TYPE.TEXT]),
     onChangeText: PropTypes.func,
     onPress: PropTypes.func,
@@ -24,18 +24,19 @@ export default class InputGroup extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{this.props.label}</Text>
         {this.props.type === INPUT_GROUP_TYPE.DATE ? 
-          <TouchableOpacity onPress={this.props.onPress}>
-            <Text style={styles.date}>{this.props.value || this.props.placeholder}</Text>
-          </TouchableOpacity>
+          <View style={styles.dateContainer}>
+            <TouchableOpacity onPress={this.props.onPress}>
+              <Text style={styles.date}>{this.props.value || this.props.placeholder}</Text>
+            </TouchableOpacity>
+          </View>
         :
           <TextInput
             style={styles.input}
-            value={this.props.value}
+            value={this.props.value ? String(this.props.value) : ''}
             placeholder={this.props.placeholder}
             placeholderTextColor={COLOR.SECONDARY}
             keyboardType={this.props.type === INPUT_GROUP_TYPE.INTEGER ? 'numeric' : 'default'}
@@ -54,6 +55,9 @@ export default class InputGroup extends Component {
   handleChangeText = (text) => {
     if (!this.isAllowed(text)) {
       text = text.slice(0, -1);
+    }
+    if (this.props.type === INPUT_GROUP_TYPE.INTEGER) {
+      text = Number(text);
     }
     this.props.onChangeText(text);
     this.setState({value: text});
@@ -95,10 +99,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
   },
+  dateContainer: {
+    flex: 1,
+  },
   date: {
     marginRight: 10,
-    color: COLOR.SECONDARY,
-    flex: 1,
+    color: COLOR.WHITE,
     textAlign: 'right',
     fontSize: 16,
     fontWeight: '300',
