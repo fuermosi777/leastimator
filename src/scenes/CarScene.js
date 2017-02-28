@@ -3,10 +3,11 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Text,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import AddOdometerReadingButton from '../components/AddOdometerReadingButton';
+import InfoPane from '../components/InfoPane';
+import Divider from '../components/Divider';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {COLOR} from '../constants';
 import {EditCarRoute, AddOdometerReadingRoute} from '../routes';
@@ -33,23 +34,33 @@ export default class CarScene extends BaseScene {
         style={styles.container}>
         <ScrollView
         >
-          <AnimatedCircularProgress
-            size={160}
-            width={6}
-            fill={75}
-            tintColor={COLOR.PRIMARY_BLUE}
-            backgroundColor={COLOR.SECONDARY}
-            linecap={CIRCULAR_PROGRESS_LINECAP}
-            rotation={0}>
-            {fill => (
-              <View>
-                <Text>Predicted</Text>
-              </View>
-            )}
-          </AnimatedCircularProgress>
+          <View style={styles.progress}>
+            <AnimatedCircularProgress
+              size={160}
+              width={6}
+              fill={75}
+              tintColor={COLOR.PRIMARY_BLUE}
+              backgroundColor={COLOR.SECONDARY}
+              linecap={CIRCULAR_PROGRESS_LINECAP}
+              rotation={0}>
+            </AnimatedCircularProgress>
+          </View>
           <AddOdometerReadingButton
             onPress={this.handleAddOdometerReadingButtonPress}
           />
+          <AddOdometerReadingButton
+            onPress={this.handleAddOdometerReadingButtonPress}
+          />
+          <Divider/>
+          <View style={styles.paneRow}>
+            <InfoPane label='Mileage' value={1231241} unit='MI'/>
+            <InfoPane label='Monthly Allowance' value={234} unit='$'/>
+          </View>
+          <Divider/>
+          <View style={styles.paneRow}>
+            <InfoPane label='Excess Mileage' value={1231241} unit='MI'/>
+            <InfoPane label='Excess Charge' value={234} unit='$'/>
+          </View>
         </ScrollView>
       </LinearGradientBackground>
     );
@@ -80,6 +91,13 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 64 + 20,
     flex: 1
+  },
+  progress: {
+    alignItems: 'center'
+  },
+  paneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   }
 });
 

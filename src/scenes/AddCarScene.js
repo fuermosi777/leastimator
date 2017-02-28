@@ -145,8 +145,8 @@ export default class AddCarScene extends BaseScene {
   handleSavePress = () => {
     try {
       validator.validate(this.state.nickname, 'Nickname', isNotEmpty, isString, isLengthLessOrEqualThan(20));
-      validator.validate(this.state.startingMiles, 'Starting miles', isNotEmpty, isInteger, isLessOrEqualThan(100000)); // TODO
-      validator.validate(this.state.milesAllowed, 'Miles allowed', isNotEmpty, isInteger, isLessOrEqualThan(100000)); // TODO
+      validator.validate(this.state.startingMiles, 'Starting miles', isNotEmpty, isInteger, isLessOrEqualThan(100000));
+      validator.validate(this.state.milesAllowed, 'Miles allowed', isNotEmpty, isInteger, isLessOrEqualThan(100000));
       validator.validate(this.state.lengthOfLease, 'Length of lease', isNotEmpty, isInteger, isLessOrEqualThan(MAX.LENGTH_OF_LEASE));
       validator.validate(this.state.leaseStartDate, 'Lease start date', isNotEmpty, isDate, isPastDate);
     } catch (err) {
@@ -154,16 +154,13 @@ export default class AddCarScene extends BaseScene {
       return;
     }
 
-    var leaseStartDate = this.state.leaseStartDate;
-    leaseStartDate = moment(leaseStartDate, 'MM/DD/YYYY').toDate();
-
     let car = {
       carIconName: String(this.state.selectedCarIconName),
       nickname: String(this.state.nickname),
       startingMiles: Number(this.state.startingMiles),
       milesAllowed: Number(this.state.milesAllowed),
       lengthOfLease: Number(this.state.lengthOfLease),
-      leaseStartDate: leaseStartDate,
+      leaseStartDate: this.state.leaseStartDate,
     };
 
     if (this.isEditing) {

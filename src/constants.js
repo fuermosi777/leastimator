@@ -4,8 +4,9 @@ export const DEFAULT = {
 };
 
 export const MAX = {
-  LENGTH_OF_LEASE: 48
-}
+  LENGTH_OF_LEASE: 48,
+  ODOMETER_READING: 1000000,
+};
 
 export const COLOR = {
   BLACK: '#000000',

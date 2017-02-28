@@ -52,6 +52,22 @@ export function isLessOrEqualThan(limit) {
   };
 }
 
+export function isLargerThan(limit) {
+  return value => {
+    if (value <= limit) {
+      throw new Error('is too small');
+    }
+  };
+}
+
+export function isLargerOrEqualThan(limit) {
+  return value => {
+    if (value < limit) {
+      throw new Error('is too small');
+    }
+  };
+}
+
 export function isPastDate(value) {
   let today = moment();
 
