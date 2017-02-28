@@ -25,6 +25,11 @@ export const INPUT_GROUP_TYPE = {
   DATE: 'date',
 };
 
+export const LIST_ITEM_BORDER_TYPE = {
+  TOP: 'top',
+  BOTTOM: 'bottom',
+};
+
 export const CAR_ICON = {
   convertible: {
     icon: require('./images/car_icons/convertible.png'),

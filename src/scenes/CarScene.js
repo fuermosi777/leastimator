@@ -5,17 +5,24 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
-import AddOdometerReadingButton from '../components/AddOdometerReadingButton';
+import ListItem from '../components/ListItem';
 import InfoPane from '../components/InfoPane';
 import Divider from '../components/Divider';
+import Gap from '../components/Gap';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import {COLOR} from '../constants';
-import {EditCarRoute, AddOdometerReadingRoute} from '../routes';
+import { COLOR, LIST_ITEM_BORDER_TYPE } from '../constants';
+import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../routes';
 import BaseScene from './BaseScene';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
 export default class CarScene extends BaseScene {
+
+  static propTypes = {
+    route: PropTypes.object.isRequired,
+    navigator: PropTypes.object.isRequired,
+    carId: PropTypes.number.isRequired
+  }
 
   constructor(props) {
     super(props);
@@ -45,13 +52,19 @@ export default class CarScene extends BaseScene {
               rotation={0}>
             </AnimatedCircularProgress>
           </View>
-          <AddOdometerReadingButton
-            onPress={this.handleAddOdometerReadingButtonPress}
+          <Gap height={20}/>
+          <ListItem
+            onPress={this.handleAddOdometerReadingPressed}
+            text='Add Odometer Reading'
+            icon={require('../images/add.png')}
+            border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
-          <AddOdometerReadingButton
-            onPress={this.handleAddOdometerReadingButtonPress}
+          <ListItem
+            onPress={this.handleHistoryReadingPressed}
+            text='History Readings'
+            icon={require('../images/burger.png')}
+            border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
-          <Divider/>
           <View style={styles.paneRow}>
             <InfoPane label='Mileage' value={1231241} unit='MI'/>
             <InfoPane label='Monthly Allowance' value={234} unit='$'/>
@@ -78,8 +91,16 @@ export default class CarScene extends BaseScene {
     }));
   }
 
-  handleAddOdometerReadingButtonPress = () => {
+  handleAddOdometerReadingPressed = () => {
     this.props.navigator.push(Object.assign(AddOdometerReadingRoute, {
+      passProps: {
+        carId: this.props.carId
+      }
+    }));
+  }
+
+  handleHistoryReadingPressed = () => {
+    this.props.navigator.push(Object.assign(ReadingListRoute, {
       passProps: {
         carId: this.props.carId
       }
@@ -100,9 +121,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
-
-CarScene.propTypes = {
-  route: PropTypes.object.isRequired,
-  navigator: PropTypes.object.isRequired,
-  carId: PropTypes.number.isRequired
-};

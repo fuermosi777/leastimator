@@ -6,20 +6,29 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import {COLOR} from '../constants';
+import {COLOR, LIST_ITEM_BORDER_TYPE} from '../constants';
+import Divider from './Divider';
 
-export default class AddOdometerReadingButton extends Component {
+export default class ListItem extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         <TouchableOpacity
           onPress={this.props.onPress}>
+          {this.props.border === LIST_ITEM_BORDER_TYPE.TOP ? 
+          <Divider/>
+          : null}
           <View style={styles.item}>
+            {this.props.icon ? 
             <View style={styles.circle}>
-              <Image source={require('../images/add.png')} style={styles.icon}/>
+              <Image source={this.props.icon} style={styles.icon}/>
             </View>
-            <Text style={styles.text}>Add Odometer Reading</Text>
+             : null}
+            <Text style={styles.text}>{this.props.text}</Text>
           </View>
+          {this.props.border === LIST_ITEM_BORDER_TYPE.BOTTOM ? 
+          <Divider/>
+          : null}
         </TouchableOpacity>
       </View>
     );
@@ -27,20 +36,18 @@ export default class AddOdometerReadingButton extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 60,
-    justifyContent: 'center',
-  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 44,
   },
   circle: {
     width: 20,
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 15,
     marginRight: 15,
   },
   icon: {
@@ -54,6 +61,9 @@ const styles = StyleSheet.create({
   }
 });
 
-AddOdometerReadingButton.propTypes = {
+ListItem.propTypes = {
   onPress: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  border: PropTypes.oneOf([LIST_ITEM_BORDER_TYPE.TOP, LIST_ITEM_BORDER_TYPE.BOTTOM]),
+  icon: PropTypes.number,
 };

@@ -5,6 +5,7 @@ import SelectCarIconScene from './scenes/SelectCarIconScene';
 import CarScene from './scenes/CarScene';
 import EditCarScene from './scenes/EditCarScene';
 import AddOdometerReadingScene from './scenes/AddOdometerReadingScene';
+import ReadingListScene from './scenes/ReadingListScene';
 
 const burgerImage = require('./images/burger.png');
 const leftArrowImage = require('./images/left_arrow.png');
@@ -85,6 +86,16 @@ export const AddOdometerReadingRoute = {
   leftButton: {
     image: closeImage,
     width: 20,
+    height: 20
+  }
+};
+
+export const ReadingListRoute = {
+  component: ReadingListScene,
+  title: 'History readings',
+  leftButton: {
+    image: leftArrowImage,
+    width: 12,
     height: 20
   }
 };
