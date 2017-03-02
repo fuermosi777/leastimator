@@ -5,6 +5,7 @@ import SelectCarIconScene from './scenes/SelectCarIconScene';
 import CarScene from './scenes/CarScene';
 import EditCarScene from './scenes/EditCarScene';
 import AddOdometerReadingScene from './scenes/AddOdometerReadingScene';
+import EditOdometerReadingScene from './scenes/EditOdometerReadingScene';
 import ReadingListScene from './scenes/ReadingListScene';
 
 const burgerImage = require('./images/burger.png');
@@ -81,7 +82,18 @@ export const EditCarRoute = {
 
 export const AddOdometerReadingRoute = {
   component: AddOdometerReadingScene,
-  title: 'Add a reading',
+  title: 'Add reading',
+  type: 'Modal',
+  leftButton: {
+    image: closeImage,
+    width: 20,
+    height: 20
+  }
+};
+
+export const EditOdometerReadingRoute = {
+  component: EditOdometerReadingScene,
+  title: 'Edit reading',
   type: 'Modal',
   leftButton: {
     image: closeImage,

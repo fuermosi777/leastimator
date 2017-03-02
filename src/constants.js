@@ -17,6 +17,7 @@ export const COLOR = {
   DIVIDER: '#373541',
   PRIMARY_BLUE: '#7BCDFB',
   TRANSPARENT: 'transparent',
+  WARNING: '#FD6264',
 };
 
 export const INPUT_GROUP_TYPE = {

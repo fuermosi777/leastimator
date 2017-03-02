@@ -2,12 +2,14 @@ import React, { PropTypes } from 'react';
 import {
   View,
   StyleSheet,
-  ListView,
 } from 'react-native';
+import { ListView } from 'realm/react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListItem from '../components/ListItem';
 import BaseScene from './BaseScene';
+import {EditOdometerReadingRoute} from '../routes';
 import {LIST_ITEM_BORDER_TYPE} from '../constants';
+import moment from 'moment';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -43,10 +45,11 @@ export default class ReadingListScene extends BaseScene {
   }
 
   renderRow = (rowData, sectionID, rowID, highlightRow) => {
-    console.log(rowData);
     return (
       <ListItem 
-        text={rowData.value}
+        text={String(rowData.value)}
+        subText='MI'
+        rightText={moment(rowData.date).format('MMMM DD, YYYY')}
         border={LIST_ITEM_BORDER_TYPE.BOTTOM}
         onPress={this.handleReadingPressed.bind(this, rowData.id)}/>
     );
@@ -57,7 +60,12 @@ export default class ReadingListScene extends BaseScene {
   }
 
   handleReadingPressed = (readingId) => {
-    console.log(readingId);
+    this.props.navigator.push(Object.assign(EditOdometerReadingRoute, {
+      passProps: {
+        carId: this.props.carId,
+        readingId
+      }
+    }));
   }
 
 }

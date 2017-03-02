@@ -61,10 +61,18 @@ export default class AddOdometerReadingScene extends BaseScene {
         <Gap height={40}/>
         <BlockButton
           onPress={this.handleSavePress}
-          title='SAVE'
+          title={this.isEditing ? 'UPDATE' : 'SAVE'}
           color={COLOR.WHITE}
           backgroundColor={COLOR.TRANSPARENT}
         />
+        {this.isEditing? 
+        <BlockButton
+          onPress={this.handleDeletePress}
+          title='DELETE'
+          color={COLOR.WARNING}
+          backgroundColor={COLOR.TRANSPARENT}
+        />
+        : null}
         <DatePicker
           isVisible={this.state.showDatePicker}
           onConfirm={this.handleDatePickerConfirm}
@@ -110,15 +118,52 @@ export default class AddOdometerReadingScene extends BaseScene {
       date: this.state.readingDate
     };
 
-    if (sameDayReading) {
-      // TODO: update the reading
-      Alert.alert('Error', 'You already have a odometer reading on this date. Do you want to update it?', [{text: 'OK'}]);
+    if (this.isEditing && this.reading) {
+      this.realm.write(() => {
+        this.reading.date = this.state.readingDate;
+        this.reading.value = this.state.odometerReading;
+      });
+      this.props.navigator.pop();
+    } else if (sameDayReading) {
+      Alert.alert('Warning', 'You already have a odometer reading on this date. Do you want to update it?', [{
+        text: 'Cancel',
+      }, {
+        text: 'OK',
+        onPress() {
+          this.realm.write(() => {
+            sameDayReading.date = this.state.readingDate;
+            sameDayReading.value = this.state.odometerReading;
+          });
+          this.props.navigator.pop();
+        }
+      }]);
     } else {
       this.realm.write(() => {
         this.car.readings.push(reading);
       });
 
       this.props.navigator.pop();
+    }
+  }
+
+  handleDeletePress = () => {
+    if (this.isEditing && this.reading) {
+      Alert.alert(
+        'Delete',
+        `Do you want to delete this reading on ${moment(this.reading.date).format('MM/DD/YYYY')}?`, [{
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel'
+        }, {
+          text: 'Yes',
+          onPress: () => {
+            this.realm.write(() => {
+              this.realm.delete(this.reading);
+            });
+            this.props.navigator.pop();
+          }
+        }]
+      );
     }
   }
 

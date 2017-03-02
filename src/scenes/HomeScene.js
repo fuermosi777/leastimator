@@ -22,9 +22,6 @@ export default class HomeScene extends BaseScene {
     super(props);
     this.state = {
     };
-  }
-
-  componentWillMount() {
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 

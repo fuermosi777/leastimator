@@ -25,6 +25,14 @@ export default class ListItem extends Component {
             </View>
              : null}
             <Text style={styles.text}>{this.props.text}</Text>
+            {this.props.subText ? 
+            <Text style={styles.subText}>{this.props.subText}</Text>
+            : null}
+            {this.props.rightText ? 
+            <View style={styles.right}>
+              <Text style={styles.rightText}>{this.props.rightText}</Text>
+            </View>
+            : null}
           </View>
           {this.props.border === LIST_ITEM_BORDER_TYPE.BOTTOM ? 
           <Divider/>
@@ -55,9 +63,28 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   text: {
-    color: COLOR.WHITE,
+    color: COLOR.PRIMARY,
     fontSize: 18,
     fontWeight: '300',
+  },
+  subText: {
+    fontWeight: '300',
+    fontSize: 18,
+    color: COLOR.PRIMARY,
+    marginLeft: 5,
+  },
+  right: {
+    position: 'absolute',
+    justifyContent: 'center',
+    right: 0,
+    top: 0,
+    height: 44,
+    paddingRight: 15,
+  },
+  rightText: {
+    fontWeight: '300',
+    fontSize: 18,
+    color: COLOR.SECONDARY,
   }
 });
 
@@ -66,4 +93,6 @@ ListItem.propTypes = {
   text: PropTypes.string.isRequired,
   border: PropTypes.oneOf([LIST_ITEM_BORDER_TYPE.TOP, LIST_ITEM_BORDER_TYPE.BOTTOM]),
   icon: PropTypes.number,
+  subText: PropTypes.string,
+  rightText: PropTypes.string,
 };

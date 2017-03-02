@@ -91,7 +91,7 @@ export default class AddCarScene extends BaseScene {
         <Gap height={40}/>
         <BlockButton
           onPress={this.handleSavePress}
-          title='SAVE'
+          title={this.isEditing ? 'UPDATE' : 'SAVE'}
           color={COLOR.WHITE}
           backgroundColor={COLOR.TRANSPARENT}
         />
@@ -99,7 +99,7 @@ export default class AddCarScene extends BaseScene {
         <BlockButton
           onPress={this.handleDeletePress}
           title='DELETE'
-          color={COLOR.WHITE}
+          color={COLOR.WARNING}
           backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
