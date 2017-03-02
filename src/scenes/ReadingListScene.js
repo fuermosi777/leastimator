@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 import {
-  View,
   StyleSheet,
+  ListView,
 } from 'react-native';
-import { ListView } from 'realm/react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListItem from '../components/ListItem';
 import BaseScene from './BaseScene';
@@ -25,9 +24,12 @@ export default class ReadingListScene extends BaseScene {
     super(props);
     this.car = this.realm.objectForPrimaryKey('Car', props.carId);
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
-    this.state = {
-      dataSource: ds.cloneWithRows(this.car.readings)
-    };
+    this.dataSource = ds.cloneWithRows(this.car.readings);
+    this.realm.addListener('change', this.updateData);
+  }
+
+  componentWillUnmount() {
+    this.realm.removeAllListeners();
   }
 
   render() {
@@ -37,7 +39,7 @@ export default class ReadingListScene extends BaseScene {
         <ListView 
           initialListSize={12}
           contentContainerStyle={styles.listView}
-          dataSource={this.state.dataSource}
+          dataSource={this.dataSource}
           renderRow={this.renderRow}>
         </ListView>
       </LinearGradientBackground>
@@ -66,6 +68,11 @@ export default class ReadingListScene extends BaseScene {
         readingId
       }
     }));
+  }
+
+  updateData = () => {
+    this.car = this.realm.objectForPrimaryKey('Car', this.props.carId);
+    this.dataSource = ds.cloneWithRows(this.car.readings);
   }
 
 }

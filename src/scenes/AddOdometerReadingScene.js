@@ -92,24 +92,21 @@ export default class AddOdometerReadingScene extends BaseScene {
       return;
     }
 
-    let sameDayIndex;
-    let sameDayReading = this.car.readings.find((reading, index) => {
+    let sameDayReading = this.car.readings.find(reading => {
       if (moment(reading.date).isSame(moment(this.state.readingDate), 'day')) {
-        sameDayIndex = index;
         return true;
       }
     });
-    let previousDayReadingValue = sameDayIndex === 0 ? this.car.startingMiles : this.car.readings[sameDayIndex - 1].value;
-    let nextDayReadingValue = sameDayIndex === this.car.readings.length - 1 ? MAX.ODOMETER_READING : this.car.readings[sameDayIndex + 1].value;
+    
     try {
       validator.validate(
         this.state.odometerReading, 
         'Reading', 
-        isLessOrEqualThan(nextDayReadingValue), 
-        isLargerOrEqualThan(previousDayReadingValue)
+        isLargerOrEqualThan(this.car.startingMiles)
       );
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
+      return;
     }
 
     let reading = {
