@@ -8,11 +8,13 @@ import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListItem from '../components/ListItem';
 import InfoPane from '../components/InfoPane';
 import Divider from '../components/Divider';
+import MileageChart from '../components/MileageChart';
 import Gap from '../components/Gap';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { COLOR, LIST_ITEM_BORDER_TYPE } from '../constants';
 import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../routes';
 import BaseScene from './BaseScene';
+import moment from 'moment';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
@@ -36,6 +38,9 @@ export default class CarScene extends BaseScene {
   }
 
   render() {
+    const mileageChartStartDate = this.car.leaseStartDate;
+    const mileageChartEndDate = moment(mileageChartStartDate).add(this.car.lengthOfLease, 'M').toDate();
+
     return (     
       <LinearGradientBackground
         style={styles.container}>
@@ -75,6 +80,13 @@ export default class CarScene extends BaseScene {
             <InfoPane label='Excess Charge' value={234} unit='$'/>
           </View>
           <Divider/>
+          <MileageChart
+            width={300}
+            height={300}
+            startDate={mileageChartStartDate}
+            endDate={mileageChartEndDate}
+            readings={this.car.readings}
+          />
         </ScrollView>
       </LinearGradientBackground>
     );
@@ -120,5 +132,5 @@ const styles = StyleSheet.create({
   paneRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  }
+  },
 });
