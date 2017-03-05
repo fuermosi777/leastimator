@@ -28,18 +28,25 @@ export default class InfoPane extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    padding: 15,
   },
   label: {
-    color: COLOR.SECONDARY
+    color: COLOR.SECONDARY,
+    fontSize: 18,
+    marginBottom: 15,
   },
   data: {
     flexDirection: 'row',
   },
   value: {
-    color: COLOR.PRIMARY
+    color: COLOR.PRIMARY,
+    fontSize: 22,
   },
   unit: {
-    color: COLOR.SECONDARY
+    color: COLOR.SECONDARY,
+    fontSize: 18,
+    marginLeft: 5,
+    marginTop: 5,
   }
 });

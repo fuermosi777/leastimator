@@ -74,6 +74,7 @@ export default class CarScene extends BaseScene {
             <InfoPane label='Excess Mileage' value={1231241} unit='MI'/>
             <InfoPane label='Excess Charge' value={234} unit='$'/>
           </View>
+          <Divider/>
         </ScrollView>
       </LinearGradientBackground>
     );

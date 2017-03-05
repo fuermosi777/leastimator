@@ -85,22 +85,24 @@ export default class AddOdometerReadingScene extends BaseScene {
   }
 
   handleSavePress = () => {
+    let {realm, state, props} = this;
+
     try {
-      validator.validate(this.state.odometerReading, 'Reading', isNotEmpty, isInteger);
+      validator.validate(state.odometerReading, 'Reading', isNotEmpty, isInteger);
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
       return;
     }
 
     let sameDayReading = this.car.readings.find(reading => {
-      if (moment(reading.date).isSame(moment(this.state.readingDate), 'day')) {
+      if (moment(reading.date).isSame(moment(state.readingDate), 'day')) {
         return true;
       }
     });
     
     try {
       validator.validate(
-        this.state.odometerReading, 
+        state.odometerReading, 
         'Reading', 
         isLargerOrEqualThan(this.car.startingMiles)
       );
@@ -111,39 +113,41 @@ export default class AddOdometerReadingScene extends BaseScene {
 
     let reading = {
       id: Number(uuid()),
-      value: Number(this.state.odometerReading),
-      date: this.state.readingDate
+      value: Number(state.odometerReading),
+      date: state.readingDate
     };
 
     if (this.isEditing && this.reading) {
-      this.realm.write(() => {
-        this.reading.date = this.state.readingDate;
-        this.reading.value = this.state.odometerReading;
+      realm.write(() => {
+        this.reading.date = state.readingDate;
+        this.reading.value = state.odometerReading;
       });
-      this.props.navigator.pop();
+      props.navigator.pop();
     } else if (sameDayReading) {
       Alert.alert('Warning', 'You already have a odometer reading on this date. Do you want to update it?', [{
         text: 'Cancel',
       }, {
         text: 'OK',
         onPress() {
-          this.realm.write(() => {
-            sameDayReading.date = this.state.readingDate;
-            sameDayReading.value = this.state.odometerReading;
+          realm.write(() => {
+            sameDayReading.date = state.readingDate;
+            sameDayReading.value = state.odometerReading;
           });
-          this.props.navigator.pop();
+          props.navigator.pop();
         }
       }]);
     } else {
-      this.realm.write(() => {
+      realm.write(() => {
         this.car.readings.push(reading);
       });
 
-      this.props.navigator.pop();
+      props.navigator.pop();
     }
   }
 
   handleDeletePress = () => {
+    let realm = this.realm;
+
     if (this.isEditing && this.reading) {
       Alert.alert(
         'Delete',
@@ -154,8 +158,8 @@ export default class AddOdometerReadingScene extends BaseScene {
         }, {
           text: 'Yes',
           onPress: () => {
-            this.realm.write(() => {
-              this.realm.delete(this.reading);
+            realm.write(() => {
+              realm.delete(this.reading);
             });
             this.props.navigator.pop();
           }

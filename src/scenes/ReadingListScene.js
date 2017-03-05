@@ -24,7 +24,7 @@ export default class ReadingListScene extends BaseScene {
     super(props);
     this.car = this.realm.objectForPrimaryKey('Car', props.carId);
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
-    this.dataSource = ds.cloneWithRows(this.car.readings);
+    this.dataSource = ds.cloneWithRows(this.car.readings.sorted('date'));
     this.realm.addListener('change', this.updateData);
   }
 
@@ -36,12 +36,15 @@ export default class ReadingListScene extends BaseScene {
     return (
       <LinearGradientBackground
         style={styles.container}>
+        {this.car.readings.length > 0 ? 
         <ListView 
           initialListSize={12}
           contentContainerStyle={styles.listView}
           dataSource={this.dataSource}
           renderRow={this.renderRow}>
         </ListView>
+        :
+        null}
       </LinearGradientBackground>
     );
   }
@@ -72,7 +75,7 @@ export default class ReadingListScene extends BaseScene {
 
   updateData = () => {
     this.car = this.realm.objectForPrimaryKey('Car', this.props.carId);
-    this.dataSource = ds.cloneWithRows(this.car.readings);
+    this.dataSource = ds.cloneWithRows(this.car.readings.sorted('date'));
   }
 
 }
