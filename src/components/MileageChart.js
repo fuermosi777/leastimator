@@ -9,19 +9,38 @@ import {
   Shape,
   Path
 } from 'ReactNativeART';
+import moment from 'moment';
 
 export default class MileageChart extends Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     readings: PropTypes.object.isRequired,
+    startingMiles: PropTypes.number.isRequired,
     startDate: PropTypes.instanceOf(Date).isRequired,
     endDate: PropTypes.instanceOf(Date).isRequired,
   }
 
   render() {
-    let {width, height, readings, startDate, endDate} = this.props;
-    console.log(readings);
+    let {width, height, startingMiles, readings, startDate, endDate} = this.props;
+
+    // make months
+    let months = [];
+    let date = startDate;
+    while (!moment(date).isSame(endDate)) {
+      months.push(date);
+      date = moment(date).add(1, 'M').toDate();
+    }
+    // make points
+    let mileages = [startingMiles];
+    let flagMonth = months[0];
+    let flagMileage = mileages[0];
+    for (let reading of readings) {
+      // TODO: odometer history crash
+      console.log(reading.value);
+    }
+
+
     // let i = 0;
     // let path = Path()
     //   .moveTo(0, height)

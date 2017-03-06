@@ -83,6 +83,7 @@ export default class CarScene extends BaseScene {
           <MileageChart
             width={300}
             height={300}
+            startingMiles={this.car.startingMiles}
             startDate={mileageChartStartDate}
             endDate={mileageChartEndDate}
             readings={this.car.readings}
