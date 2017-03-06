@@ -15,7 +15,7 @@ export default class MileageChart extends Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-    readings: PropTypes.object.isRequired,
+    readings: PropTypes.array.isRequired,
     startingMiles: PropTypes.number.isRequired,
     startDate: PropTypes.instanceOf(Date).isRequired,
     endDate: PropTypes.instanceOf(Date).isRequired,
@@ -35,8 +35,8 @@ export default class MileageChart extends Component {
     let mileages = [startingMiles];
     let flagMonth = months[0];
     let flagMileage = mileages[0];
+
     for (let reading of readings) {
-      // TODO: odometer history crash
       console.log(reading.value);
     }
 

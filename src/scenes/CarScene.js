@@ -28,19 +28,21 @@ export default class CarScene extends BaseScene {
 
   constructor(props) {
     super(props);
-    this.state = {
-      
-    };
     this.car = this.realm.objectForPrimaryKey('Car', props.carId);
+    this.startingMiles = this.car.startingMiles;
+    this.mileageChartStartDate = this.car.leaseStartDate;
+    this.mileageChartEndDate = moment(this.car.leaseStartDate).add(this.car.lengthOfLease, 'M').toDate();
+    this.readings = this.car.readings.map(reading => {
+      return {
+        date: reading.date, value: reading.value
+      };
+    });
     this.props.route.title = this.car.nickname;
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
     this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
   }
 
   render() {
-    const mileageChartStartDate = this.car.leaseStartDate;
-    const mileageChartEndDate = moment(mileageChartStartDate).add(this.car.lengthOfLease, 'M').toDate();
-
     return (     
       <LinearGradientBackground
         style={styles.container}>
@@ -83,10 +85,10 @@ export default class CarScene extends BaseScene {
           <MileageChart
             width={300}
             height={300}
-            startingMiles={this.car.startingMiles}
-            startDate={mileageChartStartDate}
-            endDate={mileageChartEndDate}
-            readings={this.car.readings}
+            startingMiles={this.startingMiles}
+            startDate={this.mileageChartStartDate}
+            endDate={this.mileageChartEndDate}
+            readings={this.readings}
           />
         </ScrollView>
       </LinearGradientBackground>
