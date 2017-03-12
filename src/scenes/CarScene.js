@@ -31,6 +31,7 @@ export default class CarScene extends BaseScene {
     this.car = this.realm.objectForPrimaryKey('Car', props.carId);
     this.startingMiles = this.car.startingMiles;
     this.mileageChartStartDate = this.car.leaseStartDate;
+    this.milesAllowed = this.car.milesAllowed;
     this.mileageChartEndDate = moment(this.car.leaseStartDate).add(this.car.lengthOfLease, 'M').toDate();
     this.readings = this.car.readings.map(reading => {
       return {
@@ -83,8 +84,7 @@ export default class CarScene extends BaseScene {
           </View>
           <Divider/>
           <MileageChart
-            width={300}
-            height={300}
+            milesAllowed={this.milesAllowed}
             startingMiles={this.startingMiles}
             startDate={this.mileageChartStartDate}
             endDate={this.mileageChartEndDate}
