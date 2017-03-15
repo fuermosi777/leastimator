@@ -29,7 +29,7 @@ export default class ReadingListScene extends BaseScene {
   }
 
   componentWillUnmount() {
-    this.realm.removeAllListeners();
+    this.realm.removeListener('change', this.updateData);
   }
 
   render() {

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   ScrollView,
 } from 'react-native';
@@ -15,6 +16,8 @@ import { COLOR, LIST_ITEM_BORDER_TYPE } from '../constants';
 import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../routes';
 import BaseScene from './BaseScene';
 import moment from 'moment';
+import {findMaxBy} from '../tool';
+import regression from '../lib/regression.min';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
@@ -28,22 +31,87 @@ export default class CarScene extends BaseScene {
 
   constructor(props) {
     super(props);
-    this.car = this.realm.objectForPrimaryKey('Car', props.carId);
-    this.startingMiles = this.car.startingMiles;
-    this.mileageChartStartDate = this.car.leaseStartDate;
-    this.milesAllowed = this.car.milesAllowed;
-    this.mileageChartEndDate = moment(this.car.leaseStartDate).add(this.car.lengthOfLease, 'M').toDate();
-    this.readings = this.car.readings.map(reading => {
-      return {
-        date: reading.date, value: reading.value
-      };
-    });
+    this.realm.addListener('change', this.updateCar.bind(this, props.carId));
+    this.updateCar(props.carId);
+    
     this.props.route.title = this.car.nickname;
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
     this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
   }
 
+  componentWillUnmount() {
+    this.realm.removeListener('change', this.updateCar.bind(this, this.props.carId));
+  }
+
+  getMonths(startDate: Date, endDate: Date) {
+    let months = [];
+    let date = startDate;
+    while (!moment(date).isSame(endDate)) {
+      months.push(date);
+      date = moment(date).add(1, 'M').toDate();
+    }
+    return months;
+  }
+
+  getFilteredReadings(months: Array, startDate, startingMiles, readings: Array) {
+    let filteredReadings = [{
+      date: startDate,
+      value: startingMiles
+    }];
+    let readingIndex = 0;
+
+    while (readingIndex <= readings.length - 1) {
+      let reading = readings[readingIndex];
+      let filteredReadingTop = filteredReadings.pop();
+
+      if (!moment(reading.date).isSame(moment(filteredReadingTop.date), 'month')) {
+        filteredReadings.push(filteredReadingTop);
+      }
+      filteredReadings.push(reading);
+
+      readingIndex++;
+    }
+
+    return filteredReadings;
+  }
+
+  getRegressionPoints(readings, months) {
+    let index = 0;
+    let monthIndex = 0;
+    let points = [];
+
+    while (index <= readings.length - 1) {
+      let reading = readings[index];
+
+      while (
+        !moment(months[monthIndex]).isSame(moment(reading.date), 'month') && 
+        monthIndex <= months.length - 1
+      ) {
+        monthIndex++;
+      }
+      points.push([
+        monthIndex + 1,
+        reading.value - this.startingMiles
+      ]);
+      index++;
+    }
+    return points;
+  }
+
   render() {
+    let months = this.getMonths(this.leaseStartDate, this.leaseEndDate);
+    let filteredReadings = this.getFilteredReadings(months, this.leaseStartDate, this.startingMiles, this.readings);
+    let currentMileage = findMaxBy(filteredReadings, 'value').value;
+    let monthlyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease);
+    let points = this.getRegressionPoints(filteredReadings, months);
+    var regressionResult = regression('linearThroughOrigin', points);
+    let k = regressionResult.equation[0];
+    let estimatedMileage = Math.floor(k * this.lengthOfLease) + this.startingMiles;
+    let estimatedMileageCirclePercentage = Math.floor(k * this.lengthOfLease / this.milesAllowed * 100);
+    estimatedMileageCirclePercentage = estimatedMileageCirclePercentage < 100 ? estimatedMileageCirclePercentage : 100;
+    let excessMileage = estimatedMileage - this.milesAllowed;
+    excessMileage = excessMileage > 0 ? excessMileage : 0;
+
     return (     
       <LinearGradientBackground
         style={styles.container}>
@@ -53,11 +121,20 @@ export default class CarScene extends BaseScene {
             <AnimatedCircularProgress
               size={160}
               width={6}
-              fill={75}
+              fill={estimatedMileageCirclePercentage}
               tintColor={COLOR.PRIMARY_BLUE}
               backgroundColor={COLOR.SECONDARY}
               linecap={CIRCULAR_PROGRESS_LINECAP}
               rotation={0}>
+              {
+                () => (
+                  <View style={styles.circleCenter}>
+                    <Text style={styles.circleSubText}>Predicted</Text>
+                    <Text style={styles.circleMainText}>{estimatedMileage}</Text>
+                    <Text style={styles.circleSubText}>Miles</Text>
+                  </View>
+                )
+              }
             </AnimatedCircularProgress>
           </View>
           <Gap height={20}/>
@@ -74,25 +151,36 @@ export default class CarScene extends BaseScene {
             border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
           <View style={styles.paneRow}>
-            <InfoPane label='Mileage' value={1231241} unit='MI'/>
-            <InfoPane label='Monthly Allowance' value={234} unit='$'/>
+            <InfoPane label='Mileage' value={currentMileage} unit='Mi'/>
+            <InfoPane label='Monthly Allowance' value={monthlyAllowance} unit='Mi'/>
           </View>
           <Divider/>
           <View style={styles.paneRow}>
-            <InfoPane label='Excess Mileage' value={1231241} unit='MI'/>
+            <InfoPane label='Excess Mileage' value={excessMileage} unit='Mi'/>
             <InfoPane label='Excess Charge' value={234} unit='$'/>
           </View>
           <Divider/>
           <MileageChart
-            milesAllowed={this.milesAllowed}
-            startingMiles={this.startingMiles}
-            startDate={this.mileageChartStartDate}
-            endDate={this.mileageChartEndDate}
-            readings={this.readings}
+            months={months}
+            filteredReadings={filteredReadings}
           />
         </ScrollView>
       </LinearGradientBackground>
     );
+  }
+
+  updateCar = (carId) => {
+    this.car = this.realm.objectForPrimaryKey('Car', carId);
+    this.startingMiles = this.car.startingMiles;
+    this.leaseStartDate = this.car.leaseStartDate;
+    this.lengthOfLease = this.car.lengthOfLease;
+    this.milesAllowed = this.car.milesAllowed;
+    this.leaseEndDate = moment(this.car.leaseStartDate).add(this.car.lengthOfLease, 'M').toDate();
+    this.readings = this.car.readings.sorted('date').map(reading => {
+      return {
+        date: reading.date, value: reading.value
+      };
+    });
   }
 
   handleLeftButtonPressed = () => {
@@ -131,6 +219,28 @@ const styles = StyleSheet.create({
   },
   progress: {
     alignItems: 'center'
+  },
+  circleCenter: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 160,
+    height: 160,
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  circleMainText: {
+    color: COLOR.PRIMARY,
+    fontSize: 24,
+    marginTop: 5,
+    marginBottom: 5
+  },
+  circleSubText: {
+    color: COLOR.SECONDARY,
+    fontWeight: '300',
+    fontSize: 16,
   },
   paneRow: {
     flexDirection: 'row',
