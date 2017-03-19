@@ -157,7 +157,7 @@ export default class CarScene extends BaseScene {
           <Divider/>
           <View style={styles.paneRow}>
             <InfoPane label='Excess Mileage' value={excessMileage} unit='Mi'/>
-            <InfoPane label='Excess Charge' value={234} unit='$'/>
+            <InfoPane label='Lease Left' value={234} unit='$'/>
           </View>
           <Divider/>
           <MileageChart
@@ -170,6 +170,7 @@ export default class CarScene extends BaseScene {
   }
 
   updateCar = (carId) => {
+    console.log('car updated');
     this.car = this.realm.objectForPrimaryKey('Car', carId);
     this.startingMiles = this.car.startingMiles;
     this.leaseStartDate = this.car.leaseStartDate;
