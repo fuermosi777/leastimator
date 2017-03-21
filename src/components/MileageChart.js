@@ -1,10 +1,12 @@
-import React, { Component,
- PropTypes } from 'react';
+import React, { 
+  Component,
+  PropTypes 
+} from 'react';
 import {
   ScrollView,
   StyleSheet,
   View,
-  Text,
+  Text
 } from 'react-native';
 import {
   LinearGradient,
@@ -63,6 +65,8 @@ export default class MileageChart extends Component {
     let linePath;
     let edgePath;
     let pointPath;
+    let maxValueLabelX;
+    let maxValueLabelY;
 
     // draw chart
 
@@ -111,6 +115,10 @@ export default class MileageChart extends Component {
           points[i + 1].y
         );
       }
+
+      maxValueLabelX = points[i + 1].x;
+      maxValueLabelY = points[i + 1].y;
+
       edgePath = Path()
         .moveTo(points[i + 1].x, points[i + 1].y)
         .lineTo(points[i + 1].x + 1, points[i + 1].y)
@@ -154,12 +162,21 @@ export default class MileageChart extends Component {
             })}
           </View>
           {this.showChart ? 
-            <Surface width={width} height={height}>
-              <Shape fill={shapeGradient} d={shapePath}/>
-              <Shape stroke={COLOR.PRIMARY_BLUE} strokeWidth={1.5} d={linePath}/>
-              <Shape fill={edgeGradient} d={edgePath}/>
-              <Shape fill={COLOR.PRIMARY_BLUE} d={pointPath}/>
-            </Surface>
+            <View>
+              <Surface width={width} height={height}>
+                <Shape fill={shapeGradient} d={shapePath}/>
+                <Shape stroke={COLOR.PRIMARY_BLUE} strokeWidth={1.5} d={linePath}/>
+                <Shape fill={edgeGradient} d={edgePath}/>
+                <Shape fill={COLOR.PRIMARY_BLUE} d={pointPath}/>
+              </Surface>
+              <View style={[
+                styles.maxValueLabel, {
+                  top: maxValueLabelY,
+                  left: maxValueLabelX
+                }]}>
+                <Text style={styles.maxValueText}>{maxValue}</Text>
+              </View>
+            </View>
           : 
             null
           }
@@ -191,5 +208,12 @@ const styles = StyleSheet.create({
     color: COLOR.SECONDARY,
     fontSize: 16,
     fontWeight: '300'
+  },
+  maxValueLabel: {
+    position: 'absolute',
+
+  },
+  maxValueText: {
+    color: COLOR.PRIMARY
   }
 });

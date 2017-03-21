@@ -98,6 +98,11 @@ export default class CarScene extends BaseScene {
     return points;
   }
 
+  getLeaseMonthLeft(filteredReadings: Array) {
+    let left = this.lengthOfLease - filteredReadings.length;
+    return left > 0 ? left : 0;
+  }
+
   render() {
     let months = this.getMonths(this.leaseStartDate, this.leaseEndDate);
     let filteredReadings = this.getFilteredReadings(months, this.leaseStartDate, this.startingMiles, this.readings);
@@ -111,6 +116,7 @@ export default class CarScene extends BaseScene {
     estimatedMileageCirclePercentage = estimatedMileageCirclePercentage < 100 ? estimatedMileageCirclePercentage : 100;
     let excessMileage = estimatedMileage - this.milesAllowed;
     excessMileage = excessMileage > 0 ? excessMileage : 0;
+    let leaseMonthLeft = this.getLeaseMonthLeft(filteredReadings);
 
     return (     
       <LinearGradientBackground
@@ -157,7 +163,7 @@ export default class CarScene extends BaseScene {
           <Divider/>
           <View style={styles.paneRow}>
             <InfoPane label='Excess Mileage' value={excessMileage} unit='Mi'/>
-            <InfoPane label='Lease Left' value={234} unit='$'/>
+            <InfoPane label='Lease Left' value={leaseMonthLeft} unit='Month'/>
           </View>
           <Divider/>
           <MileageChart
@@ -169,8 +175,7 @@ export default class CarScene extends BaseScene {
     );
   }
 
-  updateCar = (carId) => {
-    console.log('car updated');
+  updateCar = carId => {
     this.car = this.realm.objectForPrimaryKey('Car', carId);
     this.startingMiles = this.car.startingMiles;
     this.leaseStartDate = this.car.leaseStartDate;
