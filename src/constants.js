@@ -24,6 +24,7 @@ export const INPUT_GROUP_TYPE = {
   TEXT: 'text',
   INTEGER: 'integer',
   DATE: 'date',
+  FLOAT: 'float',
 };
 
 export const LIST_ITEM_BORDER_TYPE = {

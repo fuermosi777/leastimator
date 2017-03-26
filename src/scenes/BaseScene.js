@@ -6,6 +6,9 @@ import Realm from 'realm';
 export default class BaseScene extends Component {
   constructor(props) {
     super(props);
-    this.realm = new Realm({schema: [CarSchema, ReadingSchema]});
+    this.realm = new Realm({
+      schema: [CarSchema, ReadingSchema],
+      schemaVersion: 1
+    });
   }
 }

@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import {COLOR, INPUT_GROUP_TYPE, DEFAULT, MAX} from '../constants';
 import SelectCarIcon from '../components/SelectCarIcon';
@@ -31,6 +32,7 @@ export default class AddCarScene extends BaseScene {
       milesAllowed: null,
       lengthOfLease: null,
       leaseStartDate: new Date(),
+      fee: null,
     };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
@@ -42,8 +44,7 @@ export default class AddCarScene extends BaseScene {
     return (
       <LinearGradientBackground 
         style={styles.container}>
-        <KeyboardAvoidingView 
-          behavior='position'
+        <KeyboardAwareScrollView 
         >
           <SelectCarIcon
             carIconName={this.state.selectedCarIconName}
@@ -62,14 +63,14 @@ export default class AddCarScene extends BaseScene {
           />
           <InputGroup 
             value={this.state.startingMiles} 
-            label='Starting Miles'
+            label='Starting Miles' // TODO: change unit
             placeholder='20'
             type={INPUT_GROUP_TYPE.INTEGER}
             onChangeText={this.handleInputTextChange.bind(this, 'startingMiles')}
           />
           <InputGroup 
             value={this.state.milesAllowed} 
-            label='Miles Allowed'
+            label='Miles Allowed' // TODO: change unit
             placeholder='30000'
             type={INPUT_GROUP_TYPE.INTEGER}
             onChangeText={this.handleInputTextChange.bind(this, 'milesAllowed')}
@@ -87,22 +88,29 @@ export default class AddCarScene extends BaseScene {
             type={INPUT_GROUP_TYPE.DATE}
             onPress={this.handleDatePressed}
           />
-        </KeyboardAvoidingView>
-        <Gap height={40}/>
-        <BlockButton
-          onPress={this.handleSavePress}
-          title={this.isEditing ? 'UPDATE' : 'SAVE'}
-          color={COLOR.WHITE}
-          backgroundColor={COLOR.TRANSPARENT}
-        />
-        {this.isEditing ? 
-        <BlockButton
-          onPress={this.handleDeletePress}
-          title='DELETE'
-          color={COLOR.WARNING}
-          backgroundColor={COLOR.TRANSPARENT}
-        />
-        : null}
+          <InputGroup 
+            value={this.state.fee}
+            label='Miles Over Fee ($)' // TODO: change currency
+            placeholder='0.25'
+            type={INPUT_GROUP_TYPE.FLOAT}
+            onChangeText={this.handleInputTextChange.bind(this, 'fee')}
+          />
+          <Gap height={40}/>
+          <BlockButton
+            onPress={this.handleSavePress}
+            title={this.isEditing ? 'UPDATE' : 'SAVE'}
+            color={COLOR.WHITE}
+            backgroundColor={COLOR.TRANSPARENT}
+          />
+          {this.isEditing ? 
+          <BlockButton
+            onPress={this.handleDeletePress}
+            title='DELETE'
+            color={COLOR.WARNING}
+            backgroundColor={COLOR.TRANSPARENT}
+          />
+          : null}
+        </KeyboardAwareScrollView>
         <DatePicker
           isVisible={this.state.showDatePicker}
           onConfirm={this.handleDatePickerConfirm}
@@ -149,6 +157,7 @@ export default class AddCarScene extends BaseScene {
       validator.validate(this.state.milesAllowed, 'Miles allowed', isNotEmpty, isInteger, isLessOrEqualThan(100000));
       validator.validate(this.state.lengthOfLease, 'Length of lease', isNotEmpty, isInteger, isLessOrEqualThan(MAX.LENGTH_OF_LEASE));
       validator.validate(this.state.leaseStartDate, 'Lease start date', isNotEmpty, isDate, isPastDate);
+      validator.validate(this.state.fee, 'Miles over fee', isNotEmpty);
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
       return;
@@ -161,6 +170,7 @@ export default class AddCarScene extends BaseScene {
       milesAllowed: Number(this.state.milesAllowed),
       lengthOfLease: Number(this.state.lengthOfLease),
       leaseStartDate: this.state.leaseStartDate,
+      fee: parseFloat(this.state.fee),
     };
 
     if (this.isEditing) {
@@ -204,7 +214,8 @@ export default class AddCarScene extends BaseScene {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingTop: 64,
+    flex: 1
   },
   save: {
     position: 'absolute',

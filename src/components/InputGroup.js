@@ -14,9 +14,11 @@ export default class InputGroup extends Component {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
     placeholder: PropTypes.string,
-    type: PropTypes.oneOf([INPUT_GROUP_TYPE.DATE, INPUT_GROUP_TYPE.INTEGER, INPUT_GROUP_TYPE.TEXT]),
+    type: PropTypes.oneOf([INPUT_GROUP_TYPE.DATE, INPUT_GROUP_TYPE.INTEGER, INPUT_GROUP_TYPE.TEXT, INPUT_GROUP_TYPE.FLOAT]),
     onChangeText: PropTypes.func,
     onPress: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
   };
 
   constructor(props) {
@@ -24,6 +26,8 @@ export default class InputGroup extends Component {
   }
 
   render() {
+    let keyboardType = (this.props.type === INPUT_GROUP_TYPE.INTEGER || this.props.type === INPUT_GROUP_TYPE.FLOAT) ? 'numeric' : 'default';
+
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{this.props.label}</Text>
@@ -39,13 +43,15 @@ export default class InputGroup extends Component {
             value={this.props.value ? String(this.props.value) : ''}
             placeholder={this.props.placeholder}
             placeholderTextColor={COLOR.SECONDARY}
-            keyboardType={this.props.type === INPUT_GROUP_TYPE.INTEGER ? 'numeric' : 'default'}
+            keyboardType={keyboardType}
             keyboardAppearance="dark"
             onChangeText={this.handleChangeText}
             returnKeyType="done"
             dataDetectorTypes="none"
             spellCheck={false}
             autoComplete={false}
+            onFocus={this.props.onFocus}
+            onBlur={this.props.onBlur}
           />
         }
       </View>
@@ -72,6 +78,9 @@ export default class InputGroup extends Component {
     }
     if (this.props.type === INPUT_GROUP_TYPE.DATE) {
       return /^[0-9\/]+$/.test(value);
+    }
+    if (this.props.type === INPUT_GROUP_TYPE.FLOAT) {
+      return /^[0-9.]+$/.test(value);
     }
   }
 }

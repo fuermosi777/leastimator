@@ -35,7 +35,6 @@ export default class SelectCarIcon extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 64,
     height: 160,
     flex: 0,
     justifyContent: 'center',

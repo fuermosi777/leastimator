@@ -20,6 +20,7 @@ export default class EditCarScene extends AddCarScene {
       milesAllowed: this.car.milesAllowed,
       lengthOfLease: this.car.lengthOfLease,
       leaseStartDate: this.car.leaseStartDate,
+      fee: this.car.fee,
     });
   }
 

@@ -19,6 +19,7 @@ import {COLOR} from '../constants';
 import {findMaxBy} from '../tool';
 
 const ITEM_WIDTH = 60;
+const LABEL_GAP = 7; // the horizontal distance between the point with the label
 
 export default class MileageChart extends Component {
 
@@ -147,6 +148,15 @@ export default class MileageChart extends Component {
       `${width / 2}`, '0', `${width / 2}`, `${height}`
     );
 
+    let labelPositionStyles = {
+      top: maxValueLabelY
+    };
+
+    // let latestReadingDate = filteredReadings[filteredReadings.length - 1].date;
+    // let leaseEndDate = months[months.length - 1];
+
+    labelPositionStyles.left = maxValueLabelX + LABEL_GAP;
+
     return (
       <ScrollView 
         horizontal={true}
@@ -169,12 +179,8 @@ export default class MileageChart extends Component {
                 <Shape fill={edgeGradient} d={edgePath}/>
                 <Shape fill={COLOR.PRIMARY_BLUE} d={pointPath}/>
               </Surface>
-              <View style={[
-                styles.maxValueLabel, {
-                  top: maxValueLabelY,
-                  left: maxValueLabelX
-                }]}>
-                <Text style={styles.maxValueText}>{maxValue}</Text>
+              <View style={[styles.maxValueLabel, labelPositionStyles]}>
+                <Text style={styles.maxValueText}>{maxValue} MI</Text>
               </View>
             </View>
           : 
@@ -211,7 +217,9 @@ const styles = StyleSheet.create({
   },
   maxValueLabel: {
     position: 'absolute',
-
+    backgroundColor: COLOR.SECONDARY,
+    padding: 4,
+    borderRadius: 4,
   },
   maxValueText: {
     color: COLOR.PRIMARY

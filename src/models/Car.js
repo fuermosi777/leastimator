@@ -12,7 +12,8 @@ const CarSchema = {
     readings: {
       type: 'list',
       objectType: 'Reading'
-    }
+    },
+    fee: 'float'
   }
 };
 
