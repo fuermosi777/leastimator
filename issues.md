@@ -15,3 +15,11 @@ Solution: use `initialListSize`
 Cause: unknown
 
 Solution: put all realm instances in "instructor"
+
+# TODO
+
+- Line chart when there is only one odometer reading
+- Update line chart when adding new odometer reading
+- Incorrect more info
+- Enable notification in settings
+- Unit $ Kilometers

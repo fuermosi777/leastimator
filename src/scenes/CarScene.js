@@ -134,12 +134,12 @@ export default class CarScene extends BaseScene {
     let estimatedMileage = this.getPredictedMileage(Math.floor(k * this.lengthOfLease) + this.startingMiles, currentMileage);
     let estimatedMileageCirclePercentage = Math.floor(k * this.lengthOfLease / this.milesAllowed * 100);
     estimatedMileageCirclePercentage = estimatedMileageCirclePercentage < 100 ? estimatedMileageCirclePercentage : 100;
-    let excessMileage = estimatedMileage - this.milesAllowed;
+    let excessMileage = estimatedMileage - this.milesAllowed - this.startingMiles;
     excessMileage = excessMileage > 0 ? excessMileage : 0;
     let excessCharge = excessMileage * this.fee;
     let leaseMonthLeft = this.getLeaseMonthLeft(this.leaseEndDate);
 
-    let progressTintColor = excessMileage > 0 ? COLOR.WARNING : COLOR.PRIMARY_BLUE;
+    let progressTintColor = excessMileage > this.startingMiles ? COLOR.WARNING : COLOR.PRIMARY_BLUE;
 
     let dailyMileage = this.getDailyMileage(this.lengthOfLease, this.milesAllowed);
     let odometerShouldRead = this.getOdometerShouldRead(dailyMileage, this.leaseStartDate, this.milesAllowed);
