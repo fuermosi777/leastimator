@@ -70,3 +70,41 @@ export const CAR_ICON = {
     icon: require('./images/car_icons/classic.png'),
   },
 };
+
+export const STORAGE_KEY = {
+  SETTINGS: '@Settings:key'
+};
+
+export const METRIC = 'metric';
+export const IMPERIAL = 'imperial';
+
+export const MILEAGE_UNIT = {
+  [METRIC]: {
+    name: 'KM',
+    word: 'kilometer',
+    symbol: 'km'
+  },
+  [IMPERIAL]: {
+    name: 'MI',
+    word: 'mile',
+    symbol: 'mi'
+  }
+};
+
+export const USD = 'usd';
+export const GBP = 'gbp';
+export const EURO = 'euro';
+export const CNY = 'cny';
+
+export const CURRENCY_UNIT = {
+  [USD]: '$',
+  [GBP]: '£',
+  [EURO]: '€',
+  [CNY]: '¥'
+};
+
+export const OFF = 'off';
+export const WEEKLY = 'weekly';
+export const MONTHLY = 'monthly';
+
+export const NOTIFICATION_TYPES = [OFF, WEEKLY, MONTHLY];

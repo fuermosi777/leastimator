@@ -20,6 +20,6 @@ Solution: put all realm instances in "instructor"
 
 - Line chart when there is only one odometer reading
 - Update line chart when adding new odometer reading
-- Incorrect more info
 - Enable notification in settings
 - Unit $ Kilometers
+- Add popup to ask user to add odometer reading if last reading is more than 7 days ago

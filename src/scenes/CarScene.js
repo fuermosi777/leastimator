@@ -110,12 +110,13 @@ export default class CarScene extends BaseScene {
   }
 
   getDailyMileage(lengthOfLease, milesAllowed) {
-    return milesAllowed / lengthOfLease / 30;
+    return Math.floor(milesAllowed / (lengthOfLease / 12) / 365);
   }
 
-  getOdometerShouldRead(dailyMileage, leaseStartDate, milesAllowed) {
+  getOdometerShouldRead(dailyMileage, leaseStartDate, milesAllowed, startingMiles) {
+    // How many days the Lease has started yet
     let leaseStartedLength = Math.abs(moment(leaseStartDate).diff(moment(new Date()), 'days'));
-    return Math.min(milesAllowed, Math.floor(dailyMileage * leaseStartedLength));
+    return startingMiles + Math.min(milesAllowed, Math.floor(dailyMileage * leaseStartedLength));
   }
 
   getDriveUpToMileage(odometerShouldRead, currentMileage) {
@@ -142,7 +143,7 @@ export default class CarScene extends BaseScene {
     let progressTintColor = excessMileage > this.startingMiles ? COLOR.WARNING : COLOR.PRIMARY_BLUE;
 
     let dailyMileage = this.getDailyMileage(this.lengthOfLease, this.milesAllowed);
-    let odometerShouldRead = this.getOdometerShouldRead(dailyMileage, this.leaseStartDate, this.milesAllowed);
+    let odometerShouldRead = this.getOdometerShouldRead(dailyMileage, this.leaseStartDate, this.milesAllowed, this.startingMiles);
     let driveUpToMileage = this.getDriveUpToMileage(odometerShouldRead, currentMileage);
 
     return (     
