@@ -27,7 +27,6 @@ export default class SettingScene extends Component {
     try {
       settings = AsyncStorage.getItem('@settings');
     } catch (err) {
-      console.log(err);
     }
   }
 
