@@ -3,16 +3,18 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableHighlight,
 } from 'react-native';
 import { COLOR } from '../constants';
+import SwitchItem from '../class/SwitchItem';
 
 export default class ListSwitchItem extends Component {
 
   static propTypes = {
     text: PropTypes.string.isRequired,
     onSwitchChange: PropTypes.func.isRequired,
-    switchItems: PropTypes.array.isRequired,
-    selectedItems: PropTypes.array.isRequired,
+    switchItems: PropTypes.arrayOf(PropTypes.instanceOf(SwitchItem)).isRequired,
+    selectedItemName: PropTypes.string.isRequired,
   }
 
   render() {
@@ -30,17 +32,30 @@ export default class ListSwitchItem extends Component {
             if (key === this.props.switchItems.length - 1) {
               viewStyles.push(styles.lastItem);
             }
+            if (item.name === this.props.selectedItemName) {
+              viewStyles.push(styles.selectedItem);
+            }
             return (
-              <View key={key} style={viewStyles}>
-                <Text style={styles.itemText}>
-                  {item}
-                </Text>
-              </View>
+              <TouchableHighlight
+                key={key}
+                underlayColor="transparent"
+                onPress={this.onSelect.bind(this, item.name)}
+              >
+                <View style={viewStyles}>
+                    <Text style={styles.itemText}>
+                      {item.label}
+                    </Text>
+                </View>
+              </TouchableHighlight>
             );
           })}
         </View>
       </View>  
     );
+  }
+
+  onSelect(name) {
+    this.props.onSwitchChange(name);
   }
 }
 
@@ -49,23 +64,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 40,
+    height: 50,
     paddingLeft: 15,
     paddingRight: 15,
   },
   text: {
+    fontSize: 16,
+    fontWeight: '300',
     color: COLOR.PRIMARY,
   },
   switch: {
     flexDirection: 'row'
   },
   item: {
-    padding: 5,
-    borderWidth: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
     borderColor: COLOR.SECONDARY,
   },
   selectedItem: {
-
+    backgroundColor: COLOR.SECONDARY
   },
   firstItem: {
     borderTopLeftRadius: 4,
@@ -73,9 +95,11 @@ const styles = StyleSheet.create({
   },
   lastItem: {
     borderTopRightRadius: 4,
-    borderBottomRightRadius: 4
+    borderBottomRightRadius: 4,
+    borderRightWidth: 1,
   },
   itemText: {
+    fontSize: 14,
     color: COLOR.PRIMARY
   }
 });

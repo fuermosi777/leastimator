@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import {COLOR} from '../constants';
+import { COLOR } from '../constants';
 
 export default class AddCarListItem extends Component {
   render() {

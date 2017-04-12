@@ -82,11 +82,13 @@ export const MILEAGE_UNIT = {
   [METRIC]: {
     name: 'KM',
     word: 'kilometer',
+    plural: 'kilometers',
     symbol: 'km'
   },
   [IMPERIAL]: {
     name: 'MI',
     word: 'mile',
+    plural: 'miles',
     symbol: 'mi'
   }
 };

@@ -1,33 +1,45 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
-  View,
   StyleSheet,
+  AsyncStorage,
 } from 'react-native';
+import BaseScene from './BaseScene';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListSwitchItem from '../components/ListSwitchItem';
 import Divider from '../components/Divider';
+import { 
+  STORAGE_KEY,
+  METRIC,
+  IMPERIAL,
+  USD,
+  GBP,
+  EURO,
+  CNY,
+  MILEAGE_UNIT,
+  CURRENCY_UNIT,
+  OFF } from '../constants';
+import SwitchItem from '../class/SwitchItem';
 
-export default class SettingScene extends Component {
+const mileageUnitSwitchItems = [
+  new SwitchItem(METRIC, MILEAGE_UNIT[METRIC].name),
+  new SwitchItem(IMPERIAL, MILEAGE_UNIT[IMPERIAL].name)
+];
+
+const currencyUnitSwitchItems = [
+  new SwitchItem(USD, CURRENCY_UNIT[USD]),
+  new SwitchItem(GBP, CURRENCY_UNIT[GBP]),
+  new SwitchItem(EURO, CURRENCY_UNIT[EURO]),
+  new SwitchItem(CNY, CURRENCY_UNIT[CNY])
+];
+
+export default class SettingScene extends BaseScene {
   constructor(props) {
     super(props);
-  }
-  
-  async componentWillMount() {
-    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
-    try {
-      let settings = await this.getSettings();
-    } catch (err) {
-
-    }
-  }
-
-  async getSettings() {
-    let settings;
-
-    try {
-      settings = AsyncStorage.getItem('@settings');
-    } catch (err) {
-    }
+    this.state = {
+      mileageUnit: IMPERIAL,
+      currencySymbol: USD,
+      notification: OFF
+    };
   }
 
   render() {
@@ -35,9 +47,16 @@ export default class SettingScene extends Component {
       <LinearGradientBackground style={styles.container}>
         <ListSwitchItem 
           text='Mileage Unit'
-          switchItems={['MI', 'KM']}
-          onSwitchChange={() => {}}
-          selectedItems={[]}
+          switchItems={mileageUnitSwitchItems}
+          onSwitchChange={this.handleMileageUnitChange.bind(this)}
+          selectedItemName={this.state.mileageUnit}
+        />
+        <Divider/>
+        <ListSwitchItem 
+          text='Currency Symbol'
+          switchItems={currencyUnitSwitchItems}
+          onSwitchChange={this.handleCurrencySymbolChange.bind(this)}
+          selectedItemName={this.state.currencySymbol}
         />
         <Divider/>
       </LinearGradientBackground>
@@ -46,6 +65,16 @@ export default class SettingScene extends Component {
 
   handleLeftButtonPressed = () => {
     this.props.navigator.pop();
+  }
+
+  async handleMileageUnitChange(name) {
+    await this.setStateAsync({mileageUnit: name});
+    await AsyncStorage.setItem(STORAGE_KEY.SETTINGS, JSON.stringify(this.state));
+  }
+
+  async handleCurrencySymbolChange(name) {
+    await this.setStateAsync({currencySymbol: name});
+    await AsyncStorage.setItem(STORAGE_KEY.SETTINGS, JSON.stringify(this.state));
   }
 }
 

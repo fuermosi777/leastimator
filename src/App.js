@@ -8,10 +8,10 @@ import {
 import Nav from './components/Nav';
 import {COLOR} from './constants';
 import LinearGradient from 'react-native-linear-gradient';
-import { STORAGE_KEY, METRIC, USD, OFF } from './constants';
+import { STORAGE_KEY, IMPERIAL, USD, OFF } from './constants';
 
 const defaultSettings = {
-  mileageUnit: METRIC,// KM, MI
+  mileageUnit: IMPERIAL,
   currencySymbol: USD,
   notification: OFF
 };
@@ -65,7 +65,3 @@ const styles = StyleSheet.create({
     flex: 1,
   }
 });
-
-App.propTypes = {
-  // cur: PropTypes.object.isRequired,
-};
