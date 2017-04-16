@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import {
   StyleSheet,
-  KeyboardAvoidingView,
   Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
@@ -15,8 +14,9 @@ import moment from 'moment';
 import BaseScene from './BaseScene';
 import BlockButton from '../components/BlockButton';
 import Gap from '../components/Gap';
-import {uuid} from '../tool';
+import { uuid, capitalize } from '../tool';
 import validator, {isNotEmpty, isInteger, isString, isDate, isLengthLessOrEqualThan, isLessOrEqualThan, isPastDate} from '../utils/validator';
+import { MILEAGE_UNIT, CURRENCY_UNIT } from '../constants';
 
 export default class AddCarScene extends BaseScene {
 
@@ -61,20 +61,22 @@ export default class AddCarScene extends BaseScene {
             type={INPUT_GROUP_TYPE.TEXT}
             onChangeText={this.handleInputTextChange.bind(this, 'nickname')}
           />
+          {this.state.mileageUnit ? 
           <InputGroup 
             value={this.state.startingMiles} 
-            label='Starting Miles' // TODO: change unit
+            label={`Starting ${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)}`}
             placeholder='20'
             type={INPUT_GROUP_TYPE.INTEGER}
             onChangeText={this.handleInputTextChange.bind(this, 'startingMiles')}
-          />
+          /> : null}
+          {this.state.mileageUnit ? 
           <InputGroup 
             value={this.state.milesAllowed} 
-            label='Miles Allowed' // TODO: change unit
+            label={`${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)} Allowed`}
             placeholder='30000'
             type={INPUT_GROUP_TYPE.INTEGER}
             onChangeText={this.handleInputTextChange.bind(this, 'milesAllowed')}
-          />
+          /> : null}
           <InputGroup 
             value={this.state.lengthOfLease} 
             label='Length of Lease'
@@ -88,13 +90,14 @@ export default class AddCarScene extends BaseScene {
             type={INPUT_GROUP_TYPE.DATE}
             onPress={this.handleDatePressed}
           />
+          {this.state.mileageUnit && this.state.currencySymbol ? 
           <InputGroup 
             value={this.state.fee}
-            label='Miles Over Fee ($)' // TODO: change currency
+            label={`${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)} Over Fee (${CURRENCY_UNIT[this.state.currencySymbol]})`}
             placeholder='0.25'
             type={INPUT_GROUP_TYPE.FLOAT}
             onChangeText={this.handleInputTextChange.bind(this, 'fee')}
-          />
+          /> : null}
           <Gap height={40}/>
           <BlockButton
             onPress={this.handleSavePress}

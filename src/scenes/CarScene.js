@@ -17,8 +17,8 @@ import { COLOR, LIST_ITEM_BORDER_TYPE } from '../constants';
 import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../routes';
 import BaseScene from './BaseScene';
 import moment from 'moment';
-import {findMaxBy} from '../tool';
-import regression from '../lib/regression.min';
+import { findMaxBy, capitalize } from '../tool';
+import { MILEAGE_UNIT, CURRENCY_UNIT } from '../constants';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
@@ -38,13 +38,14 @@ export default class CarScene extends BaseScene {
     this.props.route.title = this.car.nickname;
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
     this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
+    this.state = {};
   }
 
   componentWillUnmount() {
     this.realm.removeListener('change', this.updateCar.bind(this, this.props.carId));
   }
 
-  getMonths(startDate: Date, endDate: Date) {
+  getMonths(startDate, endDate) {
     let months = [];
     let date = startDate;
     while (!moment(date).isSame(endDate)) {
@@ -55,7 +56,7 @@ export default class CarScene extends BaseScene {
     return months;
   }
 
-  getFilteredReadings(months: Array, startDate, startingMiles, readings: Array) {
+  getFilteredReadings(months, startDate, startingMiles, readings) {
     let filteredReadings = [{
       date: startDate,
       value: startingMiles
@@ -77,36 +78,9 @@ export default class CarScene extends BaseScene {
     return filteredReadings;
   }
 
-  getRegressionPoints(readings, months) {
-    let index = 0;
-    let monthIndex = 0;
-    let points = [];
-
-    while (index <= readings.length - 1) {
-      let reading = readings[index];
-
-      while (
-        !moment(months[monthIndex]).isSame(moment(reading.date), 'month') && 
-        monthIndex <= months.length - 1
-      ) {
-        monthIndex++;
-      }
-      points.push([
-        monthIndex + 1,
-        reading.value - this.startingMiles
-      ]);
-      index++;
-    }
-    return points;
-  }
-
   getLeaseMonthLeft(leaseEndDate) {
     let diff = moment(leaseEndDate).diff(moment(new Date()), 'months');
     return diff < 0 ? 0 : diff;
-  }
-
-  getPredictedMileage(regressionMileage, currentMileage) {
-    return Math.max(regressionMileage, currentMileage);
   }
 
   getDailyMileage(lengthOfLease, milesAllowed) {
@@ -125,19 +99,28 @@ export default class CarScene extends BaseScene {
   }
 
   render() {
+    // initialize stuff
     let months = this.getMonths(this.leaseStartDate, this.leaseEndDate);
     let filteredReadings = this.getFilteredReadings(months, this.leaseStartDate, this.startingMiles, this.readings);
     let currentMileage = findMaxBy(filteredReadings, 'value').value;
     let monthlyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease);
-    let points = this.getRegressionPoints(filteredReadings, months);
-    var regressionResult = regression('linearThroughOrigin', points);
-    let k = regressionResult.equation[0];
-    let estimatedMileage = this.getPredictedMileage(Math.floor(k * this.lengthOfLease) + this.startingMiles, currentMileage);
-    let estimatedMileageCirclePercentage = Math.floor(k * this.lengthOfLease / this.milesAllowed * 100);
+
+    // get predicted mileage
+    let estimatedMileage;
+    if (filteredReadings.length === 1) { // if only one reading, no estimation, use the starting mile
+      estimatedMileage = this.startingMiles;
+    } else {
+      let latestReading = filteredReadings[filteredReadings.length - 1];
+      let dailyMileageSoFar = Math.abs((latestReading.value - this.startingMiles) / moment(this.leaseStartDate).diff(moment(latestReading.date), 'days'));
+      estimatedMileage = Math.floor(this.startingMiles + this.lengthOfLease / 12 * 365 * dailyMileageSoFar);
+    }
+
+    let estimatedMileageCirclePercentage = Math.floor(estimatedMileage / (this.milesAllowed + this.startingMiles) * 100);
     estimatedMileageCirclePercentage = estimatedMileageCirclePercentage < 100 ? estimatedMileageCirclePercentage : 100;
+
     let excessMileage = estimatedMileage - this.milesAllowed - this.startingMiles;
     excessMileage = excessMileage > 0 ? excessMileage : 0;
-    let excessCharge = excessMileage * this.fee;
+    let excessCharge = Math.floor(excessMileage * this.fee);
     let leaseMonthLeft = this.getLeaseMonthLeft(this.leaseEndDate);
 
     let progressTintColor = excessMileage > this.startingMiles ? COLOR.WARNING : COLOR.PRIMARY_BLUE;
@@ -146,11 +129,15 @@ export default class CarScene extends BaseScene {
     let odometerShouldRead = this.getOdometerShouldRead(dailyMileage, this.leaseStartDate, this.milesAllowed, this.startingMiles);
     let driveUpToMileage = this.getDriveUpToMileage(odometerShouldRead, currentMileage);
 
-    return (     
+    let {mileageUnit} = this.state;
+
+    return (
       <LinearGradientBackground
         style={styles.container}>
         <ScrollView
         >
+
+          {mileageUnit ?
           <View style={styles.progress}>
             <AnimatedCircularProgress
               size={160}
@@ -165,53 +152,73 @@ export default class CarScene extends BaseScene {
                   <View style={styles.circleCenter}>
                     <Text style={styles.circleSubText}>Predicted</Text>
                     <Text style={styles.circleMainText}>{estimatedMileage}</Text>
-                    <Text style={styles.circleSubText}>Miles</Text>
+                    <Text style={styles.circleSubText}>{capitalize(MILEAGE_UNIT[mileageUnit].plural)}</Text>
                   </View>
                 )
               }
             </AnimatedCircularProgress>
-          </View>
+          </View> : null}
+
           <Gap height={20}/>
+
           <ListItem
             onPress={this.handleAddOdometerReadingPressed}
             text='Add Odometer Reading'
             icon={require('../images/add.png')}
             border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
+
           <ListItem
             onPress={this.handleHistoryReadingPressed}
             text='History Readings'
             icon={require('../images/burger.png')}
             border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
+
+          {mileageUnit ?
           <View style={styles.paneRow}>
-            <InfoPane label='Mileage' value={currentMileage} unit='Mi'/>
-            <InfoPane label='Monthly Allowance' value={monthlyAllowance} unit='Mi'/>
-          </View>
+            <InfoPane label='Mileage' value={currentMileage} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Monthly Allowance' value={monthlyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+          </View> : null}
+
           <Divider/>
+
+          {mileageUnit && this.state.currencySymbol ?
           <View style={styles.paneRow}>
-            <InfoPane label='Excess Mileage' value={excessMileage} unit='Mi'/>
-            <InfoPane label='Excess Charge' value={excessCharge} unit='$'/>
-          </View>
+            <InfoPane label='Excess Mileage' value={excessMileage} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Excess Charge' value={excessCharge} unit={CURRENCY_UNIT[this.state.currencySymbol]}/>
+          </View> : null}
+
           <Divider/>
+
+          {mileageUnit ?
           <MileageChart
+            mileageSymbol={MILEAGE_UNIT[mileageUnit].symbol}
             months={months}
             filteredReadings={filteredReadings}
-          />
+          /> : null}
+
           <Divider/>
+
+          {mileageUnit ?
           <LongTextListItem
             title='What should my odometer read?'
-            content={`Your odometer should currently read less than ${odometerShouldRead} miles`}
-          />
+            content={`Your odometer should currently read less than ${odometerShouldRead} ${MILEAGE_UNIT[mileageUnit].plural}`}
+          /> : null}
+
           <Divider/>
+
+          {mileageUnit ?
           <LongTextListItem
             title='How long can I drive today?'
-            content={`Your can drive up to ${driveUpToMileage} miles today and still be on track`}
-          />
+            content={`Your can drive up to ${driveUpToMileage} ${MILEAGE_UNIT[mileageUnit].plural} today and still be on track`}
+          /> : null}
+
           <LongTextListItem
             title='How long is my lease left?'
             content={`You have ${leaseMonthLeft} months left. Keep up the work!`}
           />
+
         </ScrollView>
       </LinearGradientBackground>
     );

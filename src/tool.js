@@ -11,3 +11,7 @@ export function findMaxBy(array, key) {
   }
   return maxItem;
 }
+
+export function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

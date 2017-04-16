@@ -24,6 +24,7 @@ const LABEL_GAP = 7; // the horizontal distance between the point with the label
 export default class MileageChart extends Component {
 
   static propTypes = {
+    mileageSymbol: PropTypes.string.isRequired,
     months: PropTypes.array.isRequired,
     filteredReadings: PropTypes.array.isRequired,
   }
@@ -72,7 +73,11 @@ export default class MileageChart extends Component {
     // draw chart
 
     if (filteredReadings.length === 1) {
-      this.showChart = false;
+      pointPath = Path()
+        .moveTo(points[0].x + pointRadius, points[0].y - pointRadius)
+        .arcTo(points[0].x + pointRadius, points[0].y + pointRadius, pointRadius, pointRadius)
+        .arcTo(points[0].x + pointRadius, points[0].y - pointRadius, pointRadius, pointRadius)
+        .close();
     } else {
       let i = 0;
       linePath = Path()
@@ -180,7 +185,7 @@ export default class MileageChart extends Component {
                 <Shape fill={COLOR.PRIMARY_BLUE} d={pointPath}/>
               </Surface>
               <View style={[styles.maxValueLabel, labelPositionStyles]}>
-                <Text style={styles.maxValueText}>{maxValue} MI</Text>
+                <Text style={styles.maxValueText}>{maxValue} {this.props.mileageSymbol}</Text>
               </View>
             </View>
           : 
