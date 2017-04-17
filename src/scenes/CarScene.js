@@ -214,6 +214,8 @@ export default class CarScene extends BaseScene {
             content={`Your can drive up to ${driveUpToMileage} ${MILEAGE_UNIT[mileageUnit].plural} today and still be on track`}
           /> : null}
 
+          <Divider/>
+
           <LongTextListItem
             title='How long is my lease left?'
             content={`You have ${leaseMonthLeft} months left. Keep up the work!`}
