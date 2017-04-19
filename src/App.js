@@ -19,7 +19,11 @@ const defaultSettings = {
 export default class App extends Component {
 
   async componentWillMount() {
-    await this.initSettings();
+    try {
+      await this.initSettings();
+    } catch (err) {
+      Alert.alert('Error', 'Setting initialize failed. Please contact the developer.');
+    }
   }
 
   async initSettings() {

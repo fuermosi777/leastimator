@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   ListView,
+  View,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListItem from '../components/ListItem';
+import Divider from '../components/Divider';
 import BaseScene from './BaseScene';
 import { EditOdometerReadingRoute } from '../routes';
-import { LIST_ITEM_BORDER_TYPE } from '../constants';
 import moment from 'moment';
 import { MILEAGE_UNIT } from '../constants';
 
@@ -53,12 +54,14 @@ export default class ReadingListScene extends BaseScene {
 
   renderRow = (rowData, /* sectionID, */ /*rowID, */ /* highlightRow */) => {
     return (
-      <ListItem 
-        text={String(rowData.value)}
-        subText={MILEAGE_UNIT[this.state.mileageUnit].symbol.toUpperCase()}
-        rightText={moment(rowData.date).format('MMMM DD, YYYY')}
-        border={LIST_ITEM_BORDER_TYPE.BOTTOM}
-        onPress={this.handleReadingPressed.bind(this, rowData.id)}/>
+      <View>
+        <ListItem 
+          text={String(rowData.value)}
+          subText={MILEAGE_UNIT[this.state.mileageUnit].symbol.toUpperCase()}
+          rightText={moment(rowData.date).format('MMMM DD, YYYY')}
+          onPress={this.handleReadingPressed.bind(this, rowData.id)}/>
+        <Divider/>
+      </View>
     );
   }
 

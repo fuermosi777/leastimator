@@ -10,10 +10,10 @@
     "moment": "^2.17.1",
     "react": "^16.0.0-alpha.6",
     "react-native": "^0.43.3",
-    "react-native-animated-modal": "^1.0.2",
     "react-native-circular-progress": "0.0.8",
     "react-native-keyboard-aware-scrollview": "^1.1.5",
     "react-native-linear-gradient": "^2.0.0",
+    "react-native-modal": "^2.3.2",
     "realm": "^1.0.2"
   },
   "devDependencies": {

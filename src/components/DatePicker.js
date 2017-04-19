@@ -6,7 +6,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import AnimatedModal from 'react-native-animated-modal';
+import AnimatedModal from 'react-native-modal';
 import {COLOR} from '../constants';
 
 export default class DatePicker extends Component {
@@ -86,11 +86,9 @@ export default class DatePicker extends Component {
 
 const BORDER_RADIUS = 10;
 const BACKGROUND_COLOR = COLOR.WHITE;
-const BORDER_COLOR = '#d5d5d5';
+const BORDER_COLOR = '#D5D5D5';
 const TITLE_FONT_SIZE = 18;
 const TITLE_COLOR = COLOR.BLACK;
-const BUTTON_FONT_WEIGHT = 'normal';
-const BUTTON_FONT_COLOR = COLOR.PRIMARY_BLUE;
 const BUTTON_FONT_SIZE = 22;
 
 const styles = StyleSheet.create({
@@ -120,9 +118,8 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     textAlign: 'center',
-    color: BUTTON_FONT_COLOR,
+    color: COLOR.PRIMARY_BLUE,
     fontSize: BUTTON_FONT_SIZE,
-    fontWeight: BUTTON_FONT_WEIGHT,
     backgroundColor: 'transparent',
     padding: 10,
   },
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
   cancelText: {
     padding: 10,
     textAlign: 'center',
-    color: BUTTON_FONT_COLOR,
+    color: COLOR.WARNING,
     fontSize: BUTTON_FONT_SIZE,
     backgroundColor: 'transparent',
   },

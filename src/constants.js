@@ -27,11 +27,6 @@ export const INPUT_GROUP_TYPE = {
   FLOAT: 'float',
 };
 
-export const LIST_ITEM_BORDER_TYPE = {
-  TOP: 'top',
-  BOTTOM: 'bottom',
-};
-
 export const CAR_ICON = {
   convertible: {
     icon: require('./images/car_icons/convertible.png'),
@@ -69,6 +64,9 @@ export const CAR_ICON = {
   classic: {
     icon: require('./images/car_icons/classic.png'),
   },
+  bmw_3_2017: {
+    icon: require('./images/car_icons/real/bmw-3-2017.png')
+  }
 };
 
 export const STORAGE_KEY = {

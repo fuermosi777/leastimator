@@ -165,15 +165,17 @@ export default class CarScene extends BaseScene {
             onPress={this.handleAddOdometerReadingPressed}
             text='Add Odometer Reading'
             icon={require('../images/add.png')}
-            border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
+
+          <Divider/>
 
           <ListItem
             onPress={this.handleHistoryReadingPressed}
             text='History Readings'
             icon={require('../images/burger.png')}
-            border={LIST_ITEM_BORDER_TYPE.BOTTOM}
           />
+
+          <Divider/>
 
           {mileageUnit ?
           <View style={styles.paneRow}>

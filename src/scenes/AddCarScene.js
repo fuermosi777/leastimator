@@ -173,7 +173,7 @@ export default class AddCarScene extends BaseScene {
       milesAllowed: Number(this.state.milesAllowed),
       lengthOfLease: Number(this.state.lengthOfLease),
       leaseStartDate: this.state.leaseStartDate,
-      fee: parseFloat(this.state.fee),
+      fee: parseFloat(this.state.fee)
     };
 
     if (this.isEditing) {

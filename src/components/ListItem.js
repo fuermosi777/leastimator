@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import {COLOR, LIST_ITEM_BORDER_TYPE} from '../constants';
+import { COLOR } from '../constants';
 import Divider from './Divider';
 
 export default class ListItem extends Component {
@@ -15,9 +15,6 @@ export default class ListItem extends Component {
       <View>
         <TouchableOpacity
           onPress={this.props.onPress}>
-          {this.props.border === LIST_ITEM_BORDER_TYPE.TOP ? 
-          <Divider/>
-          : null}
           <View style={styles.item}>
             {this.props.icon ? 
             <View style={styles.circle}>
@@ -34,9 +31,6 @@ export default class ListItem extends Component {
             </View>
             : null}
           </View>
-          {this.props.border === LIST_ITEM_BORDER_TYPE.BOTTOM ? 
-          <Divider/>
-          : null}
         </TouchableOpacity>
       </View>
     );
@@ -91,7 +85,6 @@ const styles = StyleSheet.create({
 ListItem.propTypes = {
   onPress: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
-  border: PropTypes.oneOf([LIST_ITEM_BORDER_TYPE.TOP, LIST_ITEM_BORDER_TYPE.BOTTOM]),
   icon: PropTypes.number,
   subText: PropTypes.string,
   rightText: PropTypes.string,
