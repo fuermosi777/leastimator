@@ -63,9 +63,6 @@ export const CAR_ICON = {
   },
   classic: {
     icon: require('./images/car_icons/classic.png'),
-  },
-  bmw_3_2017: {
-    icon: require('./images/car_icons/real/bmw-3-2017.png')
   }
 };
 
@@ -108,3 +105,5 @@ export const WEEKLY = 'weekly';
 export const MONTHLY = 'monthly';
 
 export const NOTIFICATION_TYPES = [OFF, WEEKLY, MONTHLY];
+
+export const RATE_US_URL = 'itms-apps://itunes.apple.com/app/id1228501014';

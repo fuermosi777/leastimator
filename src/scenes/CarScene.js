@@ -13,7 +13,7 @@ import MileageChart from '../components/MileageChart';
 import LongTextListItem from '../components/LongTextListItem';
 import Gap from '../components/Gap';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { COLOR, LIST_ITEM_BORDER_TYPE } from '../constants';
+import { COLOR } from '../constants';
 import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../routes';
 import BaseScene from './BaseScene';
 import moment from 'moment';

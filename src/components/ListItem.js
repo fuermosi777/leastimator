@@ -7,7 +7,6 @@ import {
   Text,
 } from 'react-native';
 import { COLOR } from '../constants';
-import Divider from './Divider';
 
 export default class ListItem extends Component {
   render() {
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 15,
     paddingRight: 15,
-    height: 44,
+    height: 50,
   },
   circle: {
     width: 20,

@@ -2,10 +2,13 @@ import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   AsyncStorage,
+  Linking,
+  Alert,
 } from 'react-native';
 import BaseScene from './BaseScene';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListSwitchItem from '../components/ListSwitchItem';
+import ListItem from '../components/ListItem';
 import Divider from '../components/Divider';
 import { 
   STORAGE_KEY,
@@ -17,7 +20,9 @@ import {
   CNY,
   MILEAGE_UNIT,
   CURRENCY_UNIT,
-  OFF } from '../constants';
+  OFF,
+  RATE_US_URL,
+} from '../constants';
 import SwitchItem from '../class/SwitchItem';
 
 const mileageUnitSwitchItems = [
@@ -59,8 +64,26 @@ export default class SettingScene extends BaseScene {
           selectedItemName={this.state.currencySymbol}
         />
         <Divider/>
+        <ListItem
+          onPress={this.handleReviewPressed}
+          text='Rate Leastimator'
+        />
+        <Divider/>
+        <ListItem
+          onPress={this.handleSupportPressed}
+          text='Support'
+        />
+        <Divider/>
       </LinearGradientBackground>
     );
+  }
+
+  handleReviewPressed = () => {
+    Linking.openURL(RATE_US_URL).catch((/* err */) => {});
+  }
+
+  handleSupportPressed = () => {
+    Linking.openURL('mailto:liuhao1990@gmail.com?subject=Need%20Help').catch((/* err */) => {});
   }
 
   handleLeftButtonPressed = () => {
