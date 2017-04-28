@@ -16,6 +16,12 @@ Cause: unknown
 
 Solution: put all realm instances in "instructor"
 
+4. Unable to resolve module `react/lib/ReactComponentTreeHook` from `/Users/hao/workspace/leastimator/node_modules/react-native/Libraries/Performance/Systrace.js`
+
+`$ react-native-git-upgrade`
+
+`npm start`
+
 # TODO
 
 - Line chart when there is only one odometer reading
