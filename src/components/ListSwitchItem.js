@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {
+  Platform,
   View,
   Text,
   StyleSheet,
@@ -35,6 +36,7 @@ export default class ListSwitchItem extends Component {
             if (item.name === this.props.selectedItemName) {
               viewStyles.push(styles.selectedItem);
             }
+
             return (
               <TouchableHighlight
                 key={key}
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row'
   },
-  item: {
+  item: Platform.OS === 'iOS' ? {
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,
@@ -85,6 +87,11 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLOR.SECONDARY,
+  } : {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   selectedItem: {
     backgroundColor: COLOR.SECONDARY

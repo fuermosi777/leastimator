@@ -1,3 +1,7 @@
+import {
+  Platform
+} from 'react-native';
+
 export const DEFAULT = {
   CAR_ICON_NAME: 'convertible',
   LENGTH_OF_LEASE: 36,
@@ -106,4 +110,4 @@ export const MONTHLY = 'monthly';
 
 export const NOTIFICATION_TYPES = [OFF, WEEKLY, MONTHLY];
 
-export const RATE_US_URL = 'itms-apps://itunes.apple.com/app/id1228501014';
+export const RATE_US_URL = Platform.OS === 'iOS' ? 'itms-apps://itunes.apple.com/app/id1228501014' : 'https://play.google.com/store/apps/details?id=com.leastimator';

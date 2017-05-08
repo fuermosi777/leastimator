@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   Alert,
+  Platform,
+  DatePickerAndroid,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import LinearGradientBackground from '../components/LinearGradientBackground';
@@ -48,7 +50,7 @@ export default class AddCarScene extends BaseScene {
         >
           <SelectCarIcon
             carIconName={this.state.selectedCarIconName}
-            onIconPress={() => {this.props.navigator.push(Object.assign(SelectCarIconRoute, {
+            onIconPress={() => {this.props.navigator.push(Object.assign(SelectCarIconRoute(), {
               passProps: {
                 onCarIconPress: this.handleCarIconNameSelected,
               }
@@ -88,7 +90,7 @@ export default class AddCarScene extends BaseScene {
             value={moment(this.state.leaseStartDate).format('MM/DD/YYYY')}
             label='Lease Start Date'
             type={INPUT_GROUP_TYPE.DATE}
-            onPress={this.handleDatePressed}
+            onPress={Platform.OS === 'iOS' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, minimumDate, maximumDate)}
           />
           {this.state.mileageUnit && this.state.currencySymbol ? 
           <InputGroup 
@@ -114,13 +116,15 @@ export default class AddCarScene extends BaseScene {
           />
           : null}
         </KeyboardAwareScrollView>
-        <DatePicker
-          isVisible={this.state.showDatePicker}
-          onConfirm={this.handleDatePickerConfirm}
-          onCancel={this.handleDatePickerCancel}
-          maximumDate={maximumDate}
-          minimumDate={minimumDate}
-          title='Pick a lease start date'/>
+        {Platform.OS === 'iOS' ? 
+          <DatePicker
+            isVisible={this.state.showDatePicker}
+            onConfirm={this.handleDatePickerConfirm}
+            onCancel={this.handleDatePickerCancel}
+            maximumDate={maximumDate}
+            minimumDate={minimumDate}
+            title='Pick a lease start date'/>
+        : null}
       </LinearGradientBackground>
     );
   }
@@ -135,6 +139,22 @@ export default class AddCarScene extends BaseScene {
 
   handleDatePickerChange = (date) => {
     this.setState({leaseStartDate: date});
+  }
+
+  handleDateAndroidPressed = async(minimumDate, maximumDate) => {
+    try {
+      const {action, year, month, day} = await DatePickerAndroid.open({
+        date: minimumDate,
+        minDate: minimumDate,
+        maxDate: maximumDate
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        let date = new Date(year, month, day);
+        this.setState({leaseStartDate: date});
+      }
+    } catch({code, message}) {
+      // console.warn(`Cannot open date picker in Android '${stateKey}': `, message);
+    }
   }
 
   handleDatePressed = () => {

@@ -61,7 +61,7 @@ export default class Nav extends Component {
   render() {
     return (
       <Navigator
-        initialRoute={HomeRoute}
+        initialRoute={HomeRoute()}
         renderScene={this.renderScene}
         configureScene={this.configureScene}
         navigationBar={

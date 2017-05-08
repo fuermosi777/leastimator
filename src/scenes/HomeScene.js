@@ -66,11 +66,11 @@ export default class HomeScene extends BaseScene {
   }
 
   handleLeftButtonPressed = () => {
-    this.props.navigator.push(SettingRoute);
+    this.props.navigator.push(SettingRoute());
   }
 
   handlePressCarListItem(car) {
-    this.props.navigator.push(Object.assign(CarRoute, {
+    this.props.navigator.push(Object.assign(CarRoute(), {
       passProps: {
         carId: car.id
       }
@@ -78,7 +78,7 @@ export default class HomeScene extends BaseScene {
   }
 
   handlePlusPress = () => {
-    this.props.navigator.push(AddCarRoute);
+    this.props.navigator.push(AddCarRoute());
   }
 }
 

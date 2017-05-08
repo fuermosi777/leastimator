@@ -26,7 +26,10 @@ export default class InputGroup extends Component {
   }
 
   render() {
-    let keyboardType = (this.props.type === INPUT_GROUP_TYPE.INTEGER || this.props.type === INPUT_GROUP_TYPE.FLOAT) ? 'numeric' : 'default';
+    let {value, type} = this.props;
+    let keyboardType = (type === INPUT_GROUP_TYPE.INTEGER || type === INPUT_GROUP_TYPE.FLOAT) ? 'numeric' : 'default';
+
+    value = value ? String(value) : '';
 
     return (
       <View style={styles.container}>
@@ -40,7 +43,7 @@ export default class InputGroup extends Component {
         :
           <TextInput
             style={styles.input}
-            value={this.props.value ? String(this.props.value) : ''}
+            value={value}
             placeholder={this.props.placeholder}
             placeholderTextColor={COLOR.SECONDARY}
             keyboardType={keyboardType}
@@ -52,6 +55,7 @@ export default class InputGroup extends Component {
             autoComplete={false}
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
+            underlineColorAndroid='rgba(0,0,0,0)'
           />
         }
       </View>
@@ -66,7 +70,6 @@ export default class InputGroup extends Component {
       text = Number(text);
     }
     this.props.onChangeText(text);
-    this.setState({value: text});
   }
 
   isAllowed(value) {

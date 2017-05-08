@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import {
-  Text,
+  Platform,
   StyleSheet,
   Alert,
+  DatePickerAndroid,
 } from 'react-native';
 import BaseScene from './BaseScene';
 import LinearGradientBackground from '../components/LinearGradientBackground';
@@ -49,7 +50,7 @@ export default class AddOdometerReadingScene extends BaseScene {
           value={moment(this.state.readingDate).format('MM/DD/YYYY')}
           label='Reading Date'
           type={INPUT_GROUP_TYPE.DATE}
-          onPress={this.handleDatePressed}
+          onPress={Platform.OS === 'iOS' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, this.state.readingDate)}
         />
         <InputGroup 
           value={this.state.odometerReading} 
@@ -73,13 +74,15 @@ export default class AddOdometerReadingScene extends BaseScene {
           backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
-        <DatePicker
-          isVisible={this.state.showDatePicker}
-          onConfirm={this.handleDatePickerConfirm}
-          onCancel={this.handleDatePickerCancel}
-          maximumDate={new Date()}
-          minimumDate={this.car.leaseStartDate}
-          title='Odometer reading date'/>
+        {Platform.OS === 'iOS' ?
+          <DatePicker
+            isVisible={this.state.showDatePicker}
+            onConfirm={this.handleDatePickerConfirm}
+            onCancel={this.handleDatePickerCancel}
+            maximumDate={new Date()}
+            minimumDate={this.car.leaseStartDate}
+            title='Odometer reading date'/>
+        : null}
       </LinearGradientBackground>
     );
   }
@@ -182,6 +185,22 @@ export default class AddOdometerReadingScene extends BaseScene {
 
   handleDatePressed = () => {
     this.setState({showDatePicker: true});
+  }
+
+  handleDateAndroidPressed = async(readingDate) => {
+    try {
+      const {action, year, month, day} = await DatePickerAndroid.open({
+        date: readingDate,
+        minDate: this.car.leaseStartDate,
+        maxDate: new Date(),
+        mode: 'default'});
+      if (action !== DatePickerAndroid.dismissedAction) {
+        let date = new Date(year, month, day);
+        this.setState({readingDate: date});
+      }
+    } catch({code, message}) {
+      // console.warn(`Cannot open date picker in Android '${stateKey}': `, message);
+    }
   }
 
   handleLeftButtonPressed = () => {

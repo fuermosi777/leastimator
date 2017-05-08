@@ -134,9 +134,7 @@ export default class CarScene extends BaseScene {
     return (
       <LinearGradientBackground
         style={styles.container}>
-        <ScrollView
-        >
-
+        <ScrollView>
           {mileageUnit ?
           <View style={styles.progress}>
             <AnimatedCircularProgress
@@ -251,7 +249,7 @@ export default class CarScene extends BaseScene {
   }
 
   handleRightButtonPressed = () => {
-    this.props.navigator.push(Object.assign(EditCarRoute, {
+    this.props.navigator.push(Object.assign(EditCarRoute(), {
       passProps: {
         carId: this.props.carId
       }
@@ -259,7 +257,7 @@ export default class CarScene extends BaseScene {
   }
 
   handleAddOdometerReadingPressed = () => {
-    this.props.navigator.push(Object.assign(AddOdometerReadingRoute, {
+    this.props.navigator.push(Object.assign(AddOdometerReadingRoute(), {
       passProps: {
         carId: this.props.carId
       }
@@ -267,7 +265,7 @@ export default class CarScene extends BaseScene {
   }
 
   handleHistoryReadingPressed = () => {
-    this.props.navigator.push(Object.assign(ReadingListRoute, {
+    this.props.navigator.push(Object.assign(ReadingListRoute(), {
       passProps: {
         carId: this.props.carId
       }

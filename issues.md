@@ -22,6 +22,10 @@ Solution: put all realm instances in "instructor"
 
 `npm start`
 
+5. Android fail
+
+`adb reverse tcp:8081 tcp:8081`
+
 # TODO
 
 - Line chart when there is only one odometer reading
