@@ -26,6 +26,11 @@ Solution: put all realm instances in "instructor"
 
 `adb reverse tcp:8081 tcp:8081`
 
+6. ios No bundle url present
+
+`lsof -i :8081`
+`kill -9 <PID>`
+
 # TODO
 
 - Line chart when there is only one odometer reading

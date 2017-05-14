@@ -10,7 +10,7 @@ export default class EditOdometerReadingScene extends AddOdometerReadingScene {
     this.isEditing = true;
     this.state = Object.assign(this.state, {
       readingDate: this.reading.date,
-      odometerReading: this.reading.value,
+      odometerReading: String(this.reading.value),
     });
   }
 

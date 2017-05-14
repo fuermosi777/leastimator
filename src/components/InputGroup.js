@@ -12,7 +12,7 @@ export default class InputGroup extends Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+    value: React.PropTypes.string,
     placeholder: PropTypes.string,
     type: PropTypes.oneOf([INPUT_GROUP_TYPE.DATE, INPUT_GROUP_TYPE.INTEGER, INPUT_GROUP_TYPE.TEXT, INPUT_GROUP_TYPE.FLOAT]),
     onChangeText: PropTypes.func,
@@ -65,9 +65,6 @@ export default class InputGroup extends Component {
   handleChangeText = (text) => {
     if (!this.isAllowed(text)) {
       text = text.slice(0, -1);
-    }
-    if (this.props.type === INPUT_GROUP_TYPE.INTEGER) {
-      text = Number(text);
     }
     this.props.onChangeText(text);
   }

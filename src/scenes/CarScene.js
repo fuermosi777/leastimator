@@ -146,10 +146,10 @@ export default class CarScene extends BaseScene {
               linecap={CIRCULAR_PROGRESS_LINECAP}
               rotation={0}>
               {
-                () => (
+                (fill) => (
                   <View style={styles.circleCenter}>
                     <Text style={styles.circleSubText}>Predicted</Text>
-                    <Text style={styles.circleMainText}>{estimatedMileage}</Text>
+                    <Text style={styles.circleMainText}>{estimatedMileage.toString()}</Text>
                     <Text style={styles.circleSubText}>{capitalize(MILEAGE_UNIT[mileageUnit].plural)}</Text>
                   </View>
                 )

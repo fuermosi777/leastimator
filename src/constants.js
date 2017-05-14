@@ -110,4 +110,4 @@ export const MONTHLY = 'monthly';
 
 export const NOTIFICATION_TYPES = [OFF, WEEKLY, MONTHLY];
 
-export const RATE_US_URL = Platform.OS === 'iOS' ? 'itms-apps://itunes.apple.com/app/id1228501014' : 'https://play.google.com/store/apps/details?id=com.leastimator';
+export const RATE_US_URL = Platform.OS === 'ios' ? 'itms-apps://itunes.apple.com/app/id1228501014' : 'https://play.google.com/store/apps/details?id=com.leastimator';

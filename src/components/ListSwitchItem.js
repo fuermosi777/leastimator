@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row'
   },
-  item: Platform.OS === 'iOS' ? {
+  item: Platform.OS === 'ios' ? {
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,

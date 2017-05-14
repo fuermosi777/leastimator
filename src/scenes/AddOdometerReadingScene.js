@@ -18,7 +18,6 @@ import validator, {
   isNotEmpty,
   isInteger,
   isLargerOrEqualThan,
-  isLessOrEqualThan,
 } from '../utils/validator';
 
 export default class AddOdometerReadingScene extends BaseScene {
@@ -36,7 +35,7 @@ export default class AddOdometerReadingScene extends BaseScene {
     this.state = {
       showDatePicker: false,
       readingDate: new Date(),
-      odometerReading: this.lastReading,
+      odometerReading: String(this.lastReading),
     };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
@@ -50,7 +49,7 @@ export default class AddOdometerReadingScene extends BaseScene {
           value={moment(this.state.readingDate).format('MM/DD/YYYY')}
           label='Reading Date'
           type={INPUT_GROUP_TYPE.DATE}
-          onPress={Platform.OS === 'iOS' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, this.state.readingDate)}
+          onPress={Platform.OS === 'ios' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, this.state.readingDate)}
         />
         <InputGroup 
           value={this.state.odometerReading} 
@@ -74,7 +73,7 @@ export default class AddOdometerReadingScene extends BaseScene {
           backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
-        {Platform.OS === 'iOS' ?
+        {Platform.OS === 'ios' ?
           <DatePicker
             isVisible={this.state.showDatePicker}
             onConfirm={this.handleDatePickerConfirm}
@@ -90,8 +89,10 @@ export default class AddOdometerReadingScene extends BaseScene {
   handleSavePress = () => {
     let {realm, state, props} = this;
 
+    let odometerReading = Number(state.odometerReading);
+
     try {
-      validator.validate(state.odometerReading, 'Reading', isNotEmpty, isInteger);
+      validator.validate(odometerReading, 'Reading', isNotEmpty, isInteger);
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
       return;
@@ -102,10 +103,10 @@ export default class AddOdometerReadingScene extends BaseScene {
         return true;
       }
     });
-    
+
     try {
       validator.validate(
-        state.odometerReading, 
+        odometerReading, 
         'Reading', 
         isLargerOrEqualThan(this.car.startingMiles)
       );
@@ -116,14 +117,14 @@ export default class AddOdometerReadingScene extends BaseScene {
 
     let reading = {
       id: Number(uuid()),
-      value: Number(state.odometerReading),
+      value: odometerReading,
       date: state.readingDate
     };
 
     if (this.isEditing && this.reading) {
       realm.write(() => {
         this.reading.date = state.readingDate;
-        this.reading.value = state.odometerReading;
+        this.reading.value = odometerReading;
       });
       props.navigator.pop();
     } else if (sameDayReading) {
@@ -134,7 +135,7 @@ export default class AddOdometerReadingScene extends BaseScene {
         onPress() {
           realm.write(() => {
             sameDayReading.date = state.readingDate;
-            sameDayReading.value = state.odometerReading;
+            sameDayReading.value = odometerReading;
           });
           props.navigator.pop();
         }
