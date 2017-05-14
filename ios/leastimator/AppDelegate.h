@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "RCTPushNotificationManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
