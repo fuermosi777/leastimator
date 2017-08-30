@@ -53,7 +53,7 @@ export default class AddOdometerReadingScene extends BaseScene {
         />
         <InputGroup
           label='Odometer Reading'
-          placeholder='20'
+          placeholder={this.state.odometerReading}
           type={INPUT_GROUP_TYPE.INTEGER}
           onChangeText={this.handleReadingInputTextChange}
         />

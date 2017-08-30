@@ -48,7 +48,7 @@ export default class CarScene extends BaseScene {
   getMonths(startDate, endDate) {
     let months = [];
     let date = startDate;
-    while (!moment(date).isSame(endDate)) {
+    while (!moment(date).isSame(endDate, 'month')) {
       months.push(date);
       date = moment(date).add(1, 'M').toDate();
     }
