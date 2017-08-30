@@ -45,14 +45,13 @@ export default class AddOdometerReadingScene extends BaseScene {
       <LinearGradientBackground
         style={styles.container}>
         <Gap height={64}/>
-        <InputGroup 
+        <InputGroup
           value={moment(this.state.readingDate).format('MM/DD/YYYY')}
           label='Reading Date'
           type={INPUT_GROUP_TYPE.DATE}
           onPress={this.handleDatePressed}
         />
-        <InputGroup 
-          value={this.state.odometerReading} 
+        <InputGroup
           label='Odometer Reading'
           placeholder='20'
           type={INPUT_GROUP_TYPE.INTEGER}
