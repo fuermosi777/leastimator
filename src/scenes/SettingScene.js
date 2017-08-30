@@ -3,7 +3,6 @@ import {
   StyleSheet,
   AsyncStorage,
   Linking,
-  Alert,
 } from 'react-native';
 import BaseScene from './BaseScene';
 import LinearGradientBackground from '../components/LinearGradientBackground';

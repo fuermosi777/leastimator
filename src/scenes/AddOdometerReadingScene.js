@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import {
-  Text,
+  Platform,
   StyleSheet,
   Alert,
+  DatePickerAndroid,
 } from 'react-native';
 import BaseScene from './BaseScene';
 import LinearGradientBackground from '../components/LinearGradientBackground';
@@ -17,7 +18,6 @@ import validator, {
   isNotEmpty,
   isInteger,
   isLargerOrEqualThan,
-  isLessOrEqualThan,
 } from '../utils/validator';
 
 export default class AddOdometerReadingScene extends BaseScene {
@@ -35,7 +35,7 @@ export default class AddOdometerReadingScene extends BaseScene {
     this.state = {
       showDatePicker: false,
       readingDate: new Date(),
-      odometerReading: this.lastReading,
+      odometerReading: String(this.lastReading),
     };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
@@ -49,7 +49,7 @@ export default class AddOdometerReadingScene extends BaseScene {
           value={moment(this.state.readingDate).format('MM/DD/YYYY')}
           label='Reading Date'
           type={INPUT_GROUP_TYPE.DATE}
-          onPress={this.handleDatePressed}
+          onPress={Platform.OS === 'ios' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, this.state.readingDate)}
         />
         <InputGroup
           label='Odometer Reading'
@@ -72,13 +72,15 @@ export default class AddOdometerReadingScene extends BaseScene {
           backgroundColor={COLOR.TRANSPARENT}
         />
         : null}
-        <DatePicker
-          isVisible={this.state.showDatePicker}
-          onConfirm={this.handleDatePickerConfirm}
-          onCancel={this.handleDatePickerCancel}
-          maximumDate={new Date()}
-          minimumDate={this.car.leaseStartDate}
-          title='Odometer reading date'/>
+        {Platform.OS === 'ios' ?
+          <DatePicker
+            isVisible={this.state.showDatePicker}
+            onConfirm={this.handleDatePickerConfirm}
+            onCancel={this.handleDatePickerCancel}
+            maximumDate={new Date()}
+            minimumDate={this.car.leaseStartDate}
+            title='Odometer reading date'/>
+        : null}
       </LinearGradientBackground>
     );
   }
@@ -86,8 +88,10 @@ export default class AddOdometerReadingScene extends BaseScene {
   handleSavePress = () => {
     let {realm, state, props} = this;
 
+    let odometerReading = Number(state.odometerReading);
+
     try {
-      validator.validate(state.odometerReading, 'Reading', isNotEmpty, isInteger);
+      validator.validate(odometerReading, 'Reading', isNotEmpty, isInteger);
     } catch (err) {
       Alert.alert('Error', err.message, [{text: 'OK'}]);
       return;
@@ -98,10 +102,10 @@ export default class AddOdometerReadingScene extends BaseScene {
         return true;
       }
     });
-    
+
     try {
       validator.validate(
-        state.odometerReading, 
+        odometerReading, 
         'Reading', 
         isLargerOrEqualThan(this.car.startingMiles)
       );
@@ -112,14 +116,14 @@ export default class AddOdometerReadingScene extends BaseScene {
 
     let reading = {
       id: Number(uuid()),
-      value: Number(state.odometerReading),
+      value: odometerReading,
       date: state.readingDate
     };
 
     if (this.isEditing && this.reading) {
       realm.write(() => {
         this.reading.date = state.readingDate;
-        this.reading.value = state.odometerReading;
+        this.reading.value = odometerReading;
       });
       props.navigator.pop();
     } else if (sameDayReading) {
@@ -130,7 +134,7 @@ export default class AddOdometerReadingScene extends BaseScene {
         onPress() {
           realm.write(() => {
             sameDayReading.date = state.readingDate;
-            sameDayReading.value = state.odometerReading;
+            sameDayReading.value = odometerReading;
           });
           props.navigator.pop();
         }
@@ -181,6 +185,22 @@ export default class AddOdometerReadingScene extends BaseScene {
 
   handleDatePressed = () => {
     this.setState({showDatePicker: true});
+  }
+
+  handleDateAndroidPressed = async(readingDate) => {
+    try {
+      const {action, year, month, day} = await DatePickerAndroid.open({
+        date: readingDate,
+        minDate: this.car.leaseStartDate,
+        maxDate: new Date(),
+        mode: 'default'});
+      if (action !== DatePickerAndroid.dismissedAction) {
+        let date = new Date(year, month, day);
+        this.setState({readingDate: date});
+      }
+    } catch({code, message}) {
+      // console.warn(`Cannot open date picker in Android '${stateKey}': `, message);
+    }
   }
 
   handleLeftButtonPressed = () => {

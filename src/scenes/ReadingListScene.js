@@ -70,7 +70,7 @@ export default class ReadingListScene extends BaseScene {
   }
 
   handleReadingPressed = (readingId) => {
-    this.props.navigator.push(Object.assign(EditOdometerReadingRoute, {
+    this.props.navigator.push(Object.assign(EditOdometerReadingRoute(), {
       passProps: {
         carId: this.props.carId,
         readingId

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   Alert,
+  Platform,
+  DatePickerAndroid,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import LinearGradientBackground from '../components/LinearGradientBackground';
@@ -28,11 +30,11 @@ export default class AddCarScene extends BaseScene {
       showDatePicker: false,
       selectedCarIconName: DEFAULT.CAR_ICON_NAME,
       nickname: '',
-      startingMiles: null,
-      milesAllowed: null,
-      lengthOfLease: null,
+      startingMiles: '',
+      milesAllowed: '',
+      lengthOfLease: '',
       leaseStartDate: new Date(),
-      fee: null,
+      fee: '',
     };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
@@ -48,7 +50,7 @@ export default class AddCarScene extends BaseScene {
         >
           <SelectCarIcon
             carIconName={this.state.selectedCarIconName}
-            onIconPress={() => {this.props.navigator.push(Object.assign(SelectCarIconRoute, {
+            onIconPress={() => {this.props.navigator.push(Object.assign(SelectCarIconRoute(), {
               passProps: {
                 onCarIconPress: this.handleCarIconNameSelected,
               }
@@ -88,7 +90,7 @@ export default class AddCarScene extends BaseScene {
             value={moment(this.state.leaseStartDate).format('MM/DD/YYYY')}
             label='Lease Start Date'
             type={INPUT_GROUP_TYPE.DATE}
-            onPress={this.handleDatePressed}
+            onPress={Platform.OS === 'ios' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, minimumDate, maximumDate)}
           />
           {this.state.mileageUnit && this.state.currencySymbol ? 
           <InputGroup 
@@ -114,13 +116,15 @@ export default class AddCarScene extends BaseScene {
           />
           : null}
         </KeyboardAwareScrollView>
-        <DatePicker
-          isVisible={this.state.showDatePicker}
-          onConfirm={this.handleDatePickerConfirm}
-          onCancel={this.handleDatePickerCancel}
-          maximumDate={maximumDate}
-          minimumDate={minimumDate}
-          title='Pick a lease start date'/>
+        {Platform.OS === 'ios' ? 
+          <DatePicker
+            isVisible={this.state.showDatePicker}
+            onConfirm={this.handleDatePickerConfirm}
+            onCancel={this.handleDatePickerCancel}
+            maximumDate={maximumDate}
+            minimumDate={minimumDate}
+            title='Pick a lease start date'/>
+        : null}
       </LinearGradientBackground>
     );
   }
@@ -135,6 +139,22 @@ export default class AddCarScene extends BaseScene {
 
   handleDatePickerChange = (date) => {
     this.setState({leaseStartDate: date});
+  }
+
+  handleDateAndroidPressed = async(minimumDate, maximumDate) => {
+    try {
+      const {action, year, month, day} = await DatePickerAndroid.open({
+        date: minimumDate,
+        minDate: minimumDate,
+        maxDate: maximumDate
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        let date = new Date(year, month, day);
+        this.setState({leaseStartDate: date});
+      }
+    } catch({code, message}) {
+      // console.warn(`Cannot open date picker in Android '${stateKey}': `, message);
+    }
   }
 
   handleDatePressed = () => {
@@ -154,18 +174,6 @@ export default class AddCarScene extends BaseScene {
   }
 
   handleSavePress = () => {
-    try {
-      validator.validate(this.state.nickname, 'Nickname', isNotEmpty, isString, isLengthLessOrEqualThan(20));
-      validator.validate(this.state.startingMiles, 'Starting miles', isNotEmpty, isInteger, isLessOrEqualThan(100000));
-      validator.validate(this.state.milesAllowed, 'Miles allowed', isNotEmpty, isInteger, isLessOrEqualThan(100000));
-      validator.validate(this.state.lengthOfLease, 'Length of lease', isNotEmpty, isInteger, isLessOrEqualThan(MAX.LENGTH_OF_LEASE));
-      validator.validate(this.state.leaseStartDate, 'Lease start date', isNotEmpty, isDate, isPastDate);
-      validator.validate(this.state.fee, 'Miles over fee', isNotEmpty);
-    } catch (err) {
-      Alert.alert('Error', err.message, [{text: 'OK'}]);
-      return;
-    }
-
     let car = {
       carIconName: String(this.state.selectedCarIconName),
       nickname: String(this.state.nickname),
@@ -175,6 +183,18 @@ export default class AddCarScene extends BaseScene {
       leaseStartDate: this.state.leaseStartDate,
       fee: Number(this.state.fee)
     };
+
+    try {
+      validator.validate(car.nickname, 'Nickname', isNotEmpty, isString, isLengthLessOrEqualThan(20));
+      validator.validate(car.startingMiles, `Starting ${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)}`, isNotEmpty, isInteger, isLessOrEqualThan(100000));
+      validator.validate(car.milesAllowed, `${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)} Allowed`, isNotEmpty, isInteger, isLessOrEqualThan(100000));
+      validator.validate(car.lengthOfLease, 'Length of lease', isNotEmpty, isInteger, isLessOrEqualThan(MAX.LENGTH_OF_LEASE));
+      validator.validate(car.leaseStartDate, 'Lease start date', isNotEmpty, isDate, isPastDate);
+      validator.validate(car.fee, `${capitalize(MILEAGE_UNIT[this.state.mileageUnit].plural)} Over Fee`, isNotEmpty);
+    } catch (err) {
+      Alert.alert('Error', err.message, [{text: 'OK'}]);
+      return;
+    }
 
     if (this.isEditing) {
       this.realm.write(() => {

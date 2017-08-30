@@ -15,12 +15,12 @@ export default class EditCarScene extends AddCarScene {
     this.isEditing = true;
     this.state = Object.assign(this.state, {
       selectedCarIconName: this.car.carIconName,
-      nickname: this.car.nickname,
-      startingMiles: this.car.startingMiles,
-      milesAllowed: this.car.milesAllowed,
-      lengthOfLease: this.car.lengthOfLease,
+      nickname: String(this.car.nickname),
+      startingMiles: String(this.car.startingMiles),
+      milesAllowed: String(this.car.milesAllowed),
+      lengthOfLease: String(this.car.lengthOfLease),
       leaseStartDate: this.car.leaseStartDate,
-      fee: this.car.fee,
+      fee: String(this.car.fee.toFixed(2)),
     });
   }
 
