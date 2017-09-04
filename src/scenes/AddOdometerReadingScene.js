@@ -35,7 +35,7 @@ export default class AddOdometerReadingScene extends BaseScene {
     this.state = {
       showDatePicker: false,
       readingDate: new Date(),
-      odometerReading: String(this.lastReading),
+      odometerReading: '',
     };
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
@@ -52,6 +52,7 @@ export default class AddOdometerReadingScene extends BaseScene {
           onPress={Platform.OS === 'ios' ? this.handleDatePressed : this.handleDateAndroidPressed.bind(this, this.state.readingDate)}
         />
         <InputGroup
+          value={this.state.odometerReading}
           label='Odometer Reading'
           placeholder={this.state.odometerReading}
           type={INPUT_GROUP_TYPE.INTEGER}
