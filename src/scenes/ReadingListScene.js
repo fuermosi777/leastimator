@@ -42,7 +42,7 @@ export default class ReadingListScene extends BaseScene {
         {this.car.readings.length > 0 && this.state.mileageUnit ? 
         <ListView 
           initialListSize={12}
-          contentContainerStyle={styles.listView}
+          style={styles.listView}
           dataSource={this.dataSource}
           renderRow={this.renderRow}>
         </ListView>

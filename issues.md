@@ -40,7 +40,7 @@ Solution: put all realm instances in "instructor"
 
 # PUBLISH ANDROID [guide](https://facebook.github.io/react-native/docs/signed-apk-android.html)
 
-Change verison code
+Change verison code: _android/app/build.gradle_
 
 https://stackoverflow.com/questions/35924721/how-to-update-version-number-of-react-native-app
 
