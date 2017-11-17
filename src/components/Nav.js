@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {HomeRoute} from '../routes';
 import {COLOR} from '../constants';
+import { ifIphoneX } from '../utils/iphonex';
 
 const routeMapper = props => ({
   LeftButton(route, navigator, index, navState) {
@@ -88,8 +89,12 @@ export default class Nav extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 12,
     height: 52,
+    ...ifIphoneX({
+      marginTop: 22,
+    }, {
+      marginTop: 12,
+    })
   },
   title: {
     flex: 1,

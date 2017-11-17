@@ -19,6 +19,7 @@ import validator, {
   isInteger,
   isLargerOrEqualThan,
 } from '../utils/validator';
+import { isIphoneX } from '../utils/iphonex';
 
 export default class AddOdometerReadingScene extends BaseScene {
   
@@ -44,7 +45,7 @@ export default class AddOdometerReadingScene extends BaseScene {
     return (
       <LinearGradientBackground
         style={styles.container}>
-        <Gap height={64}/>
+        <Gap height={isIphoneX ? 74 : 64}/>
         <InputGroup
           value={moment(this.state.readingDate).format('MM/DD/YYYY')}
           label='Reading Date'
