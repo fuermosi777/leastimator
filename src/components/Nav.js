@@ -1,126 +1,45 @@
-import React, { 
-  Component, 
-  PropTypes,  
-} from 'react';
-import {
-  Navigator,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  Image,
-  View,
-} from 'react-native';
-import {HomeRoute} from '../routes';
-import {COLOR} from '../constants';
-import { ifIphoneX } from '../utils/iphonex';
+import { StackNavigator } from 'react-navigation';
 
-const routeMapper = props => ({
-  LeftButton(route, navigator, index, navState) {
-    if (route.leftButton) {
-      return (
-        <TouchableHighlight
-          underlayColor="transparent"
-          onPress={route.onLeftButtonPressed}>
-          <View style={styles.leftButton}>
-            <Image 
-              source={route.leftButton.image} 
-              style={{width: route.leftButton.width, height: route.leftButton.height}}/>
-            </View>
-        </TouchableHighlight>
-      );
-    } else { 
-      return null;
-    }
+import HomeScene from '../scenes/HomeScene';
+import SettingScene from '../scenes/SettingScene';
+import AddCarScene from '../scenes/AddCarScene';
+import SelectCarIconScene from '../scenes/SelectCarIconScene';
+import CarScene from '../scenes/CarScene';
+import EditCarScene from '../scenes/EditCarScene';
+import AddOdometerReadingScene from '../scenes/AddOdometerReadingScene';
+import EditOdometerReadingScene from '../scenes/EditOdometerReadingScene';
+import ReadingListScene from '../scenes/ReadingListScene';
+
+const RootNavigator = StackNavigator({
+  Home: {
+    screen: HomeScene
   },
-  RightButton(route, navigator, index, navState) {
-    if (route.rightButton) {
-      return (
-        <TouchableHighlight
-          underlayColor="transparent"
-          onPress={route.onRightButtonPressed}>
-          <View style={styles.rightButton}>
-            <Image 
-              source={route.rightButton.image} 
-              style={{width: route.rightButton.width, height: route.rightButton.height}}/>
-          </View>
-        </TouchableHighlight>
-      );
-    } else { 
-      return null;
-    }
+  Setting: {
+    screen: SettingScene
   },
-  Title(route, navigator, index, navState) {
-    return (
-      <Text style={styles.title}>
-        {route.title}
-      </Text>
-    );
+  AddCar: {
+    screen: AddCarScene
+  },
+  SelectCarIcon: {
+    screen: SelectCarIconScene
+  },
+  Car: {
+    screen: CarScene
+  },
+  EditCar: {
+    screen: EditCarScene
+  },
+  AddOdometerReading: {
+    screen: AddOdometerReadingScene
+  },
+  EditOdometerReading: {
+    screen: EditOdometerReadingScene
+  },
+  ReadingList: {
+    screen: ReadingListScene
   }
+}, {
+  headerMode: 'float'
 });
 
-export default class Nav extends Component {
-  render() {
-    return (
-      <Navigator
-        initialRoute={HomeRoute()}
-        renderScene={this.renderScene}
-        configureScene={this.configureScene}
-        navigationBar={
-          <Navigator.NavigationBar
-            style={styles.container}
-            routeMapper={routeMapper(this.props)}
-          />
-        }
-      />
-    );
-  }
-
-  renderScene = (route, navigator) => {
-    return <route.component navigator={navigator} route={route} {...route.passProps} />;
-  }
-
-  configureScene = (route) => {
-    if(route.type === 'Modal') {
-      return Navigator.SceneConfigs.FloatFromBottom;
-    }
-    return Navigator.SceneConfigs.PushFromRight;
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    height: 52,
-    ...ifIphoneX({
-      marginTop: 22,
-    }, {
-      marginTop: 12,
-    })
-  },
-  title: {
-    flex: 1,
-    color: COLOR.WHITE,
-    fontSize: 22,
-    fontWeight: '300',
-    textAlign: 'center',
-  },
-  leftButton: {
-    marginLeft: 10,
-    width: 40,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  rightButton: {
-    marginRight: 10,
-    width: 40,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  placeholder: {
-    flex: 1,
-  }
-});
-
-Nav.propTypes = {
-};
+export default RootNavigator;

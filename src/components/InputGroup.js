@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   TextInput,
@@ -12,7 +13,7 @@ export default class InputGroup extends Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
-    value: React.PropTypes.string,
+    value: PropTypes.string,
     placeholder: PropTypes.string,
     type: PropTypes.oneOf([INPUT_GROUP_TYPE.DATE, INPUT_GROUP_TYPE.INTEGER, INPUT_GROUP_TYPE.TEXT, INPUT_GROUP_TYPE.FLOAT]),
     onChangeText: PropTypes.func,

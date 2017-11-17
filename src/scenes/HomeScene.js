@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -11,18 +11,29 @@ import {
 import {AddCarRoute, CarRoute} from '../routes';
 import {COLOR} from '../constants';
 import CarListItem from '../components/CarListItem';
+import NavBar from '../components/NavBar';
 import AddCarListItem from '../components/AddCarListItem';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import {SettingRoute} from '../routes';
 import BaseScene from './BaseScene';
+const burgerImage = require('../images/burger.png');
 
 export default class HomeScene extends BaseScene {
+
+  static navigationOptions = {
+    header: props => {
+      return (
+        <NavBar
+          title='Leastimator'
+        />
+      );
+    }
+  }
 
   constructor(props) {
     super(props);
     this.state = {
     };
-    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
   render() {
@@ -91,7 +102,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   containerList: {
-    paddingTop: 64,
     flex: 1,
   },
   scrollView: {
@@ -128,7 +138,3 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   }
 });
-
-HomeScene.propTypes = {
-  navigator: PropTypes.object.isRequired,
-};

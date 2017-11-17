@@ -1,11 +1,12 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Alert,
   Platform,
   DatePickerAndroid,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import {COLOR, INPUT_GROUP_TYPE, DEFAULT, MAX} from '../constants';
 import SelectCarIcon from '../components/SelectCarIcon';

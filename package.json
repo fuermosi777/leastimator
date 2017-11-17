@@ -8,13 +8,15 @@
   },
   "dependencies": {
     "moment": "^2.17.1",
-    "react": "^16.0.0-alpha.6",
-    "react-native": "^0.43.4",
-    "react-native-circular-progress": "0.0.8",
-    "react-native-keyboard-aware-scrollview": "^1.1.5",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-native": "^0.50.3",
+    "react-native-circular-progress": "git://github.com/bgryszko/react-native-circular-progress.git",
+    "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-modal": "^2.3.2",
     "react-native-push-notification": "^3.0.0",
+    "react-navigation": "^1.0.0-beta.19",
     "realm": "^1.13.0"
   },
   "devDependencies": {

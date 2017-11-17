@@ -30,7 +30,6 @@ export default class BaseScene extends Component {
   }
 
   async componentWillMount() {
-    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
 
     let settings;
 
@@ -55,7 +54,7 @@ export default class BaseScene extends Component {
     try {
       await AsyncStorage.setItem(STORAGE_KEY.SETTINGS, JSON.stringify(defaultSettings));
     } catch (err) {
-      Alert.alert('Error', 'There is some proble retrieving user settings');
+      Alert.alert('Error', 'There is some problems retrieving user settings');
     }
   }
 }
