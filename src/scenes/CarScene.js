@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -20,25 +19,35 @@ import BaseScene from './BaseScene';
 import moment from 'moment';
 import { findMaxBy, capitalize } from '../tool';
 import { MILEAGE_UNIT, CURRENCY_UNIT } from '../constants';
+import NavBar from '../components/NavBar';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
 export default class CarScene extends BaseScene {
 
-  static propTypes = {
-    route: PropTypes.object.isRequired,
-    navigator: PropTypes.object.isRequired,
-    carId: PropTypes.number.isRequired
-  }
+  static navigationOptions = ({ navigation }) => ({
+    header: () => {
+      return (
+        <NavBar
+          title={navigation.state.params.title}
+          leftIcon={require('../images/left_arrow.png')}
+        />
+      );
+    }
+  })
 
   constructor(props) {
     super(props);
-    this.realm.addListener('change', this.updateCar.bind(this, props.carId));
-    this.updateCar(props.carId);
+
+    const { params } = props.navigation.state;
     
-    this.props.route.title = this.car.nickname;
-    this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
-    this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
+
+    this.realm.addListener('change', this.updateCar.bind(this, params.carId));
+    this.updateCar(params.carId);
+    
+    // this.props.route.title = this.car.nickname;
+    // this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
+    // this.props.route.onRightButtonPressed = this.handleRightButtonPressed;
     this.state = {};
   }
 
@@ -276,11 +285,11 @@ export default class CarScene extends BaseScene {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 64 + 20,
     flex: 1
   },
   progress: {
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLOR.TRANSPARENT
   },
   circleCenter: {
     position: 'absolute',

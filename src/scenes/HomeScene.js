@@ -80,12 +80,15 @@ export default class HomeScene extends BaseScene {
     this.props.navigator.push(SettingRoute());
   }
 
-  handlePressCarListItem(car) {
-    this.props.navigator.push(Object.assign(CarRoute(), {
-      passProps: {
-        carId: car.id
-      }
-    }));
+  handlePressCarListItem = car => {
+    const {navigate} = this.props.navigation;
+
+    navigate('Car', { carId: car.id, title: car.nickname });
+    // this.props.navigator.push(Object.assign(CarRoute(), {
+    //   passProps: {
+    //     carId: car.id
+    //   }
+    // }));
   }
 
   handlePlusPress = () => {
@@ -105,7 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    paddingTop: 16,
   },
   outline: {
     marginBottom: 40,

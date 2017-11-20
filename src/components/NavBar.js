@@ -3,36 +3,39 @@ import PropTypes from 'prop-types';
 import {
   View,
   Text,
+  TouchableHighlight,
+  Image,
   StyleSheet
 } from 'react-native';
 import {COLOR} from '../constants';
+import { ifIphoneX } from '../utils/iphonex';
 
 export default class NavBar extends Component {
 
   static propTypes = {
     title: PropTypes.string,
-    leftItem: PropTypes.node,
-    rightItem: PropTypes.node
+    leftIcon: PropTypes.any,
+    rightIcon: PropTypes.any
   }
 
   static defaultProps = {
     title: '',
-    leftItem: null,
-    rightItem: null
+    leftIcon: null,
+    rightIcon: null
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.left}>
-          {this.props.leftItem}
-        </View>
+        <TouchableHighlight style={styles.left}>
+          <Image source={this.props.leftIcon} style={styles.iconImage}/>
+        </TouchableHighlight>
         <View style={styles.center}>
           <Text style={styles.title}>{this.props.title}</Text>
         </View>
-        <View style={styles.right}>
-        {this.props.rightItem}
-        </View>
+        <TouchableHighlight style={styles.right}>
+          <Image source={this.props.rightIcon} style={styles.iconImage}/>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -40,11 +43,17 @@ export default class NavBar extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: COLOR.LESSBLACK,
+    paddingHorizontal: 20,
+    ...ifIphoneX({
+      height: 84,
+      paddingTop: 20,
+    }, {
+      height: 64
+    })
   },
   left: {
 
@@ -54,10 +63,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: COLOR.WHITE
+    color: COLOR.PRIMARY
   },
   right: {
     
+  },
+  iconImage: {
+    width: 24,
+    height: 24,
+    tintColor: COLOR.PRIMARY_BLUE
   }
 });
 
