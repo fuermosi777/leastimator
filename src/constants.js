@@ -104,6 +104,11 @@ export const CURRENCY_UNIT = {
   [CNY]: '¥'
 };
 
+export const DEFAULT_WIDGET_READING = {
+  PREDICTED: 'predicted',
+  SHOULD_READ: 'should read'
+};
+
 export const OFF = 'off';
 export const WEEKLY = 'weekly';
 export const MONTHLY = 'monthly';

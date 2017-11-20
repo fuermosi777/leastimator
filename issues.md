@@ -18,7 +18,7 @@ Solution: put all realm instances in "instructor"
 
 4. Unable to resolve module `react/lib/ReactComponentTreeHook` from `/Users/hao/workspace/leastimator/node_modules/react-native/Libraries/Performance/Systrace.js`
 
-`$ react-native-git-upgrade`
+Use RN 0.43.3
 
 `npm start`
 
@@ -51,3 +51,7 @@ Generate APK
 TEST APK
 
 `react-native run-android --variant=release`
+
+# DON'T UPGRADE
+
+It's unnessary.

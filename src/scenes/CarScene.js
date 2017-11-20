@@ -18,7 +18,7 @@ import { EditCarRoute, AddOdometerReadingRoute, ReadingListRoute } from '../rout
 import BaseScene from './BaseScene';
 import moment from 'moment';
 import { findMaxBy, capitalize } from '../tool';
-import { MILEAGE_UNIT, CURRENCY_UNIT } from '../constants';
+import { MILEAGE_UNIT, CURRENCY_UNIT, DEFAULT_WIDGET_READING } from '../constants';
 
 const CIRCULAR_PROGRESS_LINECAP = 'round';
 
@@ -148,8 +148,8 @@ export default class CarScene extends BaseScene {
               {
                 (fill) => (
                   <View style={styles.circleCenter}>
-                    <Text style={styles.circleSubText}>Predicted</Text>
-                    <Text style={styles.circleMainText}>{estimatedMileage.toString()}</Text>
+                    <Text style={styles.circleSubText}>{this.state.defaultReadingWidget === DEFAULT_WIDGET_READING.PREDICTED ? 'Predicted' : 'Should Read'}</Text>
+                    <Text style={styles.circleMainText}>{this.state.defaultReadingWidget === DEFAULT_WIDGET_READING.PREDICTED ? estimatedMileage.toString() : odometerShouldRead.toString()}</Text>
                     <Text style={styles.circleSubText}>{capitalize(MILEAGE_UNIT[mileageUnit].plural)}</Text>
                   </View>
                 )

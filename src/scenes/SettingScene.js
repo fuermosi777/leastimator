@@ -21,6 +21,7 @@ import {
   CURRENCY_UNIT,
   OFF,
   RATE_US_URL,
+  DEFAULT_WIDGET_READING
 } from '../constants';
 import SwitchItem from '../class/SwitchItem';
 
@@ -36,17 +37,24 @@ const currencyUnitSwitchItems = [
   new SwitchItem(CNY, CURRENCY_UNIT[CNY])
 ];
 
+const defaultReadingWidget = [
+  new SwitchItem(DEFAULT_WIDGET_READING.PREDICTED, 'Predicted'),
+  new SwitchItem(DEFAULT_WIDGET_READING.SHOULD_READ, 'Should Read')
+];
+
 export default class SettingScene extends BaseScene {
   constructor(props) {
     super(props);
     this.state = {
       mileageUnit: IMPERIAL,
       currencySymbol: USD,
-      notification: OFF
+      notification: OFF,
+      defaultReadingWidget: DEFAULT_WIDGET_READING.PREDICTED
     };
   }
 
   render() {
+    console.log(this.state)
     return (
       <LinearGradientBackground style={styles.container}>
         <ListSwitchItem 
@@ -61,6 +69,13 @@ export default class SettingScene extends BaseScene {
           switchItems={currencyUnitSwitchItems}
           onSwitchChange={this.handleCurrencySymbolChange.bind(this)}
           selectedItemName={this.state.currencySymbol}
+        />
+        <Divider/>
+        <ListSwitchItem 
+          text='Currency Symbol'
+          switchItems={defaultReadingWidget}
+          onSwitchChange={this.handleDefaultReadingWidgetChange.bind(this)}
+          selectedItemName={this.state.defaultReadingWidget}
         />
         <Divider/>
         <ListItem
@@ -87,6 +102,11 @@ export default class SettingScene extends BaseScene {
 
   handleLeftButtonPressed = () => {
     this.props.navigator.pop();
+  }
+
+  async handleDefaultReadingWidgetChange(name) {
+    await this.setStateAsync({defaultReadingWidget: name});
+    await AsyncStorage.setItem(STORAGE_KEY.SETTINGS, JSON.stringify(this.state));
   }
 
   async handleMileageUnitChange(name) {

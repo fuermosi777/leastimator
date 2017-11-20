@@ -3,6 +3,7 @@ import {
   StyleSheet,
   ListView,
   View,
+  Text,
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import ListItem from '../components/ListItem';
@@ -10,7 +11,7 @@ import Divider from '../components/Divider';
 import BaseScene from './BaseScene';
 import { EditOdometerReadingRoute } from '../routes';
 import moment from 'moment';
-import { MILEAGE_UNIT } from '../constants';
+import { MILEAGE_UNIT, COLOR } from '../constants';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -47,7 +48,9 @@ export default class ReadingListScene extends BaseScene {
           renderRow={this.renderRow}>
         </ListView>
         :
-        null}
+        <View style={styles.emptyTextContainer}>
+          <Text style={styles.emptyText}>No history reading yet.</Text>
+        </View>}
       </LinearGradientBackground>
     );
   }
@@ -92,5 +95,13 @@ const styles = StyleSheet.create({
   },
   listView: {
     flex: 1, 
+  },
+  emptyTextContainer: {
+    padding: 20
+  },
+  emptyText: {
+    color: COLOR.SECONDARY,
+    fontSize: 14,
+    textAlign: 'center'
   }
 });

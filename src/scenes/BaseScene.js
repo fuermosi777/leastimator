@@ -6,12 +6,13 @@ import {
 import CarSchema from '../models/Car';
 import ReadingSchema from '../models/Reading';
 import Realm from 'realm';
-import { STORAGE_KEY, IMPERIAL, USD, OFF } from '../constants';
+import { STORAGE_KEY, IMPERIAL, USD, OFF, DEFAULT_WIDGET_READING } from '../constants';
 
 const defaultSettings = {
   mileageUnit: IMPERIAL,
   currencySymbol: USD,
-  notification: OFF
+  notification: OFF,
+  defaultReadingWidget: DEFAULT_WIDGET_READING.PREDICTED
 };
 
 export default class BaseScene extends Component {
@@ -38,10 +39,17 @@ export default class BaseScene extends Component {
       settings = await AsyncStorage.getItem(STORAGE_KEY.SETTINGS);
       if (settings !== null) {
         settings = JSON.parse(settings);
-        this.setState({
-          mileageUnit: settings.mileageUnit,
-          currencySymbol: settings.currencySymbol
-        });
+
+
+        // Add default key to new vals
+        let keys = Object.keys(defaultSettings);
+        for (let i = 0; i < keys.length; i++) {
+          if (!settings.hasOwnProperty(keys[i])) {
+            settings[keys[i]] = defaultSettings[keys[i]];
+          }
+        }
+
+        this.setState(settings);
       } else {
         await this.setupSettings();
       }

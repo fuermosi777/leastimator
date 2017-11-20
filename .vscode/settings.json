@@ -5,7 +5,6 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "node_modules/": true,
         "**/build/": true,
         "**/__snapshots__/": true,
         "default.realm.management/": true,
@@ -16,5 +15,9 @@
     },
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
-    "javascript.validate.enable": false
+    "javascript.validate.enable": false,
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true
+    }
   }

@@ -25,6 +25,19 @@ export default class HomeScene extends BaseScene {
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
   }
 
+  componentDidMount() {
+    let cars = this.realm.objects('Car');
+
+    // If only one car, then just go to that car
+    if (cars.length === 1) {
+      this.props.navigator.push(Object.assign(CarRoute(), {
+        passProps: {
+          carId: cars[0].id
+        }
+      }));
+    }
+  }
+
   render() {
     let cars = this.realm.objects('Car');
     let showFirstScreen = cars.length === 0;
