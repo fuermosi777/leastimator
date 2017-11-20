@@ -6,7 +6,8 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  Text
+  Text,
+  Platform
 } from 'react-native';
 import {
   LinearGradient,
@@ -179,7 +180,7 @@ export default class MileageChart extends Component {
           {this.showChart ? 
             <View>
               <Surface width={width} height={height}>
-                <Shape fill={shapeGradient} d={shapePath}/>
+                {Platform.OS === 'ios' ? <Shape fill={shapeGradient} d={shapePath}/> : null}
                 <Shape stroke={COLOR.PRIMARY_BLUE} strokeWidth={1.5} d={linePath}/>
                 <Shape fill={edgeGradient} d={edgePath}/>
                 <Shape fill={COLOR.PRIMARY_BLUE} d={pointPath}/>

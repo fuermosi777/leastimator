@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row'
   },
-  item: Platform.OS === 'ios' ? {
+  item: {
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,
@@ -87,23 +87,20 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLOR.SECONDARY,
-  } : {
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
   },
   selectedItem: {
     backgroundColor: COLOR.SECONDARY
   },
-  firstItem: {
+  firstItem: Platform.OS === 'ios' ? {
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4
-  },
-  lastItem: {
+  } : {},
+  lastItem: Platform.OS === 'ios' ? {
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
     borderRightWidth: 1,
+  } : {
+    borderRightWidth: 1
   },
   itemText: {
     fontSize: 14,
