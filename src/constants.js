@@ -8,8 +8,8 @@ export const DEFAULT = {
 };
 
 export const MAX = {
-  LENGTH_OF_LEASE: 48,
-  ODOMETER_READING: 1000000,
+  LENGTH_OF_LEASE: 72,
+  ODOMETER_READING: 1200000,
 };
 
 export const COLOR = {
