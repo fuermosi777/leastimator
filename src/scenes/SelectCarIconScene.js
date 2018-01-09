@@ -28,9 +28,10 @@ export default class SelectCarIconScene extends BaseScene {
       <LinearGradientBackground 
         style={styles.container}>
         <ListView 
-          initialListSize={12}
+          initialListSize={80}
           contentContainerStyle={styles.listView}
           dataSource={this.state.dataSource}
+          removeClippedSubviews={false}
           renderRow={this.renderRow}>
         </ListView>
       </LinearGradientBackground>

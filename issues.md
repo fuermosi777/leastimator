@@ -18,7 +18,7 @@ Solution: put all realm instances in "instructor"
 
 4. Unable to resolve module `react/lib/ReactComponentTreeHook` from `/Users/hao/workspace/leastimator/node_modules/react-native/Libraries/Performance/Systrace.js`
 
-Use RN 0.43.3
+Use RN 0.43.3, remove "^" before react and react-native, 
 
 `npm start`
 
