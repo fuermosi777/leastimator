@@ -3,21 +3,19 @@ import {
   View,
   StyleSheet,
   Image,
-  TouchableHighlight,
-  ListView,
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 import LinearGradientBackground from '../components/LinearGradientBackground';
 import BaseScene from './BaseScene';
 import {COLOR, CAR_ICON} from '../constants';
-
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class SelectCarIconScene extends BaseScene {
 
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: ds.cloneWithRows(CAR_ICON)
+      dataSource: Object.keys(CAR_ICON)
     };
 
     this.props.route.onLeftButtonPressed = this.handleLeftButtonPressed;
@@ -27,26 +25,26 @@ export default class SelectCarIconScene extends BaseScene {
     return (     
       <LinearGradientBackground 
         style={styles.container}>
-        <ListView 
-          initialListSize={80}
+        <FlatList 
+          numColumns={3}
+          keyExtractor={item => item}
           contentContainerStyle={styles.listView}
-          dataSource={this.state.dataSource}
-          removeClippedSubviews={false}
-          renderRow={this.renderRow}>
-        </ListView>
+          data={this.state.dataSource}
+          renderItem={this.renderItem}>
+        </FlatList>
       </LinearGradientBackground>
     );
   }
 
-  renderRow = (rowData, sectionID, rowID, highlightRow) => {
+  renderItem = ({ item }) => {
     return (
       <View style={styles.circle}>
-        <TouchableHighlight
+        <TouchableOpacity
           underlayColor="transparent"
-          onPress={this.handleCarIconPress.bind(this, rowID)}
+          onPress={this.handleCarIconPress.bind(this, item)}
         >
-          <Image style={styles.icon} source={rowData.icon}/>
-        </TouchableHighlight>
+          <Image style={styles.icon} source={CAR_ICON[item].icon}/>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -83,6 +81,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 80,
+    height: 80,
     resizeMode: 'contain',
   }
 });

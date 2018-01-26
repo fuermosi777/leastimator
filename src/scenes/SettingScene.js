@@ -54,7 +54,6 @@ export default class SettingScene extends BaseScene {
   }
 
   render() {
-    console.log(this.state)
     return (
       <LinearGradientBackground style={styles.container}>
         <ListSwitchItem 

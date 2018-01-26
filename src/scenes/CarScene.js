@@ -78,6 +78,16 @@ export default class CarScene extends BaseScene {
     return filteredReadings;
   }
 
+  getLeaseMonthsPassed(leaseStartDate) {
+    let diff = moment(leaseStartDate).diff(moment(new Date()), 'months');
+    return Math.abs(diff);
+  }
+
+  getLeaseDaysPassed(leaseStartDate) {
+    let diff = moment(leaseStartDate).diff(moment(new Date()), 'days');
+    return Math.abs(diff);
+  }
+
   getLeaseMonthLeft(leaseEndDate) {
     let diff = moment(leaseEndDate).diff(moment(new Date()), 'months');
     return diff < 0 ? 0 : diff;
@@ -103,6 +113,9 @@ export default class CarScene extends BaseScene {
     let months = this.getMonths(this.leaseStartDate, this.leaseEndDate);
     let filteredReadings = this.getFilteredReadings(months, this.leaseStartDate, this.startingMiles, this.readings);
     let currentMileage = findMaxBy(filteredReadings, 'value').value;
+    let unusedMileage = this.milesAllowed - currentMileage;
+    unusedMileage = unusedMileage > 0 ? unusedMileage : 0;
+    let dailyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease / 12);
     let monthlyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease);
 
     // get predicted mileage
@@ -122,6 +135,8 @@ export default class CarScene extends BaseScene {
     excessMileage = excessMileage > 0 ? excessMileage : 0;
     let excessCharge = Math.floor(excessMileage * this.fee);
     let leaseMonthLeft = this.getLeaseMonthLeft(this.leaseEndDate);
+    let leaseDayPassed = this.getLeaseDaysPassed(this.leaseStartDate);
+    let leaseMonthPassed = this.getLeaseMonthsPassed(this.leaseStartDate);
 
     let progressTintColor = excessMileage > this.startingMiles ? COLOR.WARNING : COLOR.PRIMARY_BLUE;
 
@@ -177,8 +192,16 @@ export default class CarScene extends BaseScene {
 
           {mileageUnit ?
           <View style={styles.paneRow}>
-            <InfoPane label='Mileage' value={currentMileage} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
-            <InfoPane label='Monthly Allowance' value={monthlyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Current Mileage' value={currentMileage} label2='Unused Mileage' value2={unusedMileage} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Should Read' value={odometerShouldRead} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+          </View> : null}
+
+          <Divider/>
+
+          {mileageUnit ?
+          <View style={styles.paneRow}>
+            <InfoPane label='Daily Behavior' label2='Daily Allowance' value={currentMileage / leaseDayPassed | 0} value2={dailyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Monthly Behavior' label2='Monthly Allowance' value={currentMileage / leaseMonthPassed | 0} value2={monthlyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
           </View> : null}
 
           <Divider/>
