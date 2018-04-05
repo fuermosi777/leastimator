@@ -115,7 +115,7 @@ export default class CarScene extends BaseScene {
     let currentMileage = findMaxBy(filteredReadings, 'value').value;
     let unusedMileage = this.milesAllowed - currentMileage;
     unusedMileage = unusedMileage > 0 ? unusedMileage : 0;
-    let dailyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease / 12);
+    let dailyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease / 30);
     let monthlyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease);
 
     // get predicted mileage
