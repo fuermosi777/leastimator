@@ -55,3 +55,7 @@ TEST APK
 # DON'T UPGRADE
 
 It's unnessary.
+
+7. XCode 9.3 doesnt build
+
+https://github.com/facebook/react-native/issues/18638

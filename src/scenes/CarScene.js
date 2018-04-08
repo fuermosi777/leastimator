@@ -183,6 +183,14 @@ export default class CarScene extends BaseScene {
           <Divider/>
 
           <ListItem
+            onPress={this.handleAddOdometerReadingPressed}
+            text='Fuel Up'
+            icon={require('../images/gas.png')}
+          />
+
+          <Divider/>
+
+          <ListItem
             onPress={this.handleHistoryReadingPressed}
             text='History Readings'
             icon={require('../images/burger.png')}
@@ -299,7 +307,8 @@ export default class CarScene extends BaseScene {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 64 + 20,
-    flex: 1
+    flex: 1,
+    position: 'relative'
   },
   progress: {
     alignItems: 'center'

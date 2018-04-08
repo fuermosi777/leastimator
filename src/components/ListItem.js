@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 20,
     resizeMode: 'contain',
+    tintColor: COLOR.PRIMARY_BLUE
   },
   text: {
     color: COLOR.PRIMARY,
