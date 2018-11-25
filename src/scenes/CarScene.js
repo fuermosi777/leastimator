@@ -180,13 +180,13 @@ export default class CarScene extends BaseScene {
             icon={require('../images/add.png')}
           />
 
-          <Divider/>
+          {/* <Divider/>
 
           <ListItem
             onPress={this.handleAddOdometerReadingPressed}
             text='Fuel Up'
             icon={require('../images/gas.png')}
-          />
+          /> */}
 
           <Divider/>
 

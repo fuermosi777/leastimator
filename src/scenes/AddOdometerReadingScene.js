@@ -12,7 +12,7 @@ import Gap from '../components/Gap';
 import DatePicker from '../components/DatePicker';
 import BlockButton from '../components/BlockButton';
 import moment from 'moment';
-import {COLOR, INPUT_GROUP_TYPE, MAX} from '../constants';
+import {COLOR, INPUT_GROUP_TYPE} from '../constants';
 import {uuid} from '../tool';
 import validator, {
   isNotEmpty,
