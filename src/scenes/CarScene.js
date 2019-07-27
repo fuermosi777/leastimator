@@ -113,7 +113,8 @@ export default class CarScene extends BaseScene {
     let months = this.getMonths(this.leaseStartDate, this.leaseEndDate);
     let filteredReadings = this.getFilteredReadings(months, this.leaseStartDate, this.startingMiles, this.readings);
     let currentMileage = findMaxBy(filteredReadings, 'value').value;
-    let unusedMileage = this.milesAllowed - currentMileage;
+    let calibratedCurrentMileage = currentMileage - this.startingMiles;
+    let unusedMileage = this.milesAllowed - calibratedCurrentMileage;
     unusedMileage = unusedMileage > 0 ? unusedMileage : 0;
     let dailyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease / 30);
     let monthlyAllowance = Math.floor(this.milesAllowed / this.lengthOfLease);
@@ -208,8 +209,8 @@ export default class CarScene extends BaseScene {
 
           {mileageUnit ?
           <View style={styles.paneRow}>
-            <InfoPane label='Daily Behavior' label2='Daily Allowance' value={currentMileage / leaseDayPassed | 0} value2={dailyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
-            <InfoPane label='Monthly Behavior' label2='Monthly Allowance' value={currentMileage / leaseMonthPassed | 0} value2={monthlyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Daily Behavior' label2='Daily Allowance' value={calibratedCurrentMileage / leaseDayPassed | 0} value2={dailyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
+            <InfoPane label='Monthly Behavior' label2='Monthly Allowance' value={calibratedCurrentMileage / leaseMonthPassed | 0} value2={monthlyAllowance} unit={MILEAGE_UNIT[mileageUnit].symbol}/>
           </View> : null}
 
           <Divider/>
@@ -251,6 +252,15 @@ export default class CarScene extends BaseScene {
             title='How long is my lease left?'
             content={`You have ${leaseMonthLeft} months left. Keep up the work!`}
           />
+
+          {mileageUnit && excessMileage > 0 ? [
+            <Divider key="divider"/>,
+            <LongTextListItem
+              key="item"
+              title='What is my excess mileage?'
+              content={`If you continue driving like this, the predicate mileage when your lease ends is ${estimatedMileage} ${MILEAGE_UNIT[mileageUnit].plural}, and the excess mileage will be ${excessMileage} ${MILEAGE_UNIT[mileageUnit].plural}.`}
+            />
+          ] : null}
 
         </ScrollView>
       </LinearGradientBackground>
